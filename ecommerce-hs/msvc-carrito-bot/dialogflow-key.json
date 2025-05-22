@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "soy-meridian-457923-t3",
+  "private_key_id": "5ac01d86537f30cf74d096a493b1b2492bae4d44",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDCqVd+Iue1YO0K\nRCC26S5GnM+H1ZrGFxdsQmapeS0l+YIZynz2By81C4V4CUauBszIKCvWJrX8g8h8\np3KYVinIEhmWsKypOPiRsWSV2YxYpGLlkWAz1b7E5HKREsAGTi9JzeFSdlIbVhuY\naoDeL/ituTx8imozKjGlLJB1gDKy1eCr0thDzxSaRwzzAuNtgctCRT7GfY4TxwNz\nMgWPjqdoHCgBdVYvr5TKbJomA5/6b8wvy9dF+y8OIcV3/f+QMS+HtJzF1yB7h28b\n+qIArh0fTmaFGIiLFj/oEDE+N0uIg29AlAR0FrOQp6sidnYrEFA7MQDJzRU6idPg\nWYUJKL4JAgMBAAECggEANpffndSUP14rnJF2y1WiUNNxsJrLiXq4avhEaos9ikTr\no+gSG73wE2RjzkJrvCrUC96YTLsWlvcupycfEHI5zY6l9okeI2eC7vldSFl27vVL\ndy7KWD89/WJEb0Ne72XGBWDkLIhahqgjnR9hfO7fQ3mL6TG4jxjqS3SwHwQRM+4i\najc11BT0UnFai2RoRoyQoLKTvKB8pqbyDM1LVox1m9fNKxgRxm8nEAoXlfyqKnQC\nrb9LBKUUkC7I4LsX97jEBsDw1tCUad35yLz7FEDENYPkxtZ+Q4AR9P99tJ8raCwP\nLm1RkHDtBPnWRBkbysMiJh0H4n0QInAuUTmT8ek/8QKBgQDrs9U0ZutQPrO4lGi1\nC+rMeMC5MunFjBTxfC9x4QrMJvO80Ub51j1UwGmUlYGi0QV7gqR69qKGqIO/TmBJ\nZDCEADAjXTINC/qJfWfdrOZYWQQVLtB8NUE7uSoPPmu5UIfxiQ55mf68DK2/QwQi\nBSR6KtZNWwSf+3mbdSi/mOyclwKBgQDTbL31tvdfTZ+9YK2hKfoQX/P/NV0qw3sg\nrTMoDAD8LTFuGcRwUL3/pX1thfl9l4dv6CBGP6JLD36WWpaD0valL0+NhkOlJWtO\nmaHP17XSnYHU1jVB9XjnJFldYyytlTJ9EcTxj8s65sVW0Hf1DF0y622di1m4Yxro\nHflgYfSuXwKBgQDJU8taPkrjORu0HvgtJOfDDaW4y1dJCPVeq6+u+wWJCgCJmMyi\nXK/4c337j5SyqQ2gyR+LdJ2wncIjJ2QxbCXQqoRzwIgfAstWo0qT27rJXgeRvHIS\nlj6JMAlQCgZjvPjRhDtb/QDMSZwjUa/3CyN0QqDYZFVX/aqK8hEDTzFUMwKBgQCc\nIWiipOxG/97gDh4KryIQp5tbMwBLTTKHLgBiKYMstv8SzIqJWscEnCRlFhPpUFZf\nKK900Rc7kQStadZPISKtV6PK4oTf1yNIVyHsh+Ko11ICZ/HKdMlFAE3SLiPXSB+R\nxuaGcObm53aBps9/MhM9QCihuD+Yb+91zHTVXWFAxwKBgC+xghNoLz6reIr3SvMg\niZbwgg5vnkSGzUP1r7OVjHK5feYuLzU3x/sQ8cLAYKpSnleaVy7O2Mm7m9dQuUAC\n7N9wmVVBnaUDshVkbIwo2Pei2+j6egvQJG3IiEbDRubkYAs0svkzhY7vH0FVVTpG\ngV64HqhOrIVPtvIFi3Y984Np\n-----END PRIVATE KEY-----\n",
+  "client_email": "dialogflow-access-958@soy-meridian-457923-t3.iam.gserviceaccount.com",
+  "client_id": "101013921941673449326",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/dialogflow-access-958%40soy-meridian-457923-t3.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

@@ -1,0 +1,4 @@
+IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'pro2023')
+BEGIN
+    CREATE DATABASE pro2023;
+END

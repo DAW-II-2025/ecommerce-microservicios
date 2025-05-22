@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" type="image/svg+xml" href="./img/logo.jpg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprar</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        .logo {
+            width: 120px;
+            height: 70px;
+        }
+        .cart {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+        }
+        .count-product {
+            display: inline-block;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 0 5px;
+            font-size: 14px;
+            position: relative;
+            top: -10px;
+            left: -10px;
+        }
+        .cart-products {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            width: 300px;
+            background-color: white;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+        }
+        .close-btn {
+            cursor: pointer;
+            text-align: right;
+        }
+        .cart-products h3, .cart-products h2, .cart-products .btn {
+            text-align: center;
+        }
+        .cart-products .card-items {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        #divCuentaDetalles {
+            position: absolute;
+            top: 60px;
+            right: 150px;
+        }
+
+        .dropdown-content {
+            background-color: #f9f9f9;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            padding: 12px 16px;
+            z-index: 10;
+        }
+
+        .dropdown-content a {
+            color: black;
+            text-decoration: none;
+            display: block;
+            padding: 8px 0;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg" style="background-color: rgb(29, 30, 44);">
+        <div class="container-fluid">
+            <img class="logo" src="./images/logo.jpg" alt="Logo">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown" style="margin-left: 50px;">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item" >
+                        <a class="nav-link active" aria-current="page" href="index.html" style="color: white;">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="productos.html" style="color: white;">Productos</a>
+                    </li>
+                    <li class="nav-item dropdown" >
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: white;">
+                            Categorías
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" >Monitores</a></li>
+                            <li><a class="dropdown-item" href="#">Periféricos</a></li>
+                            <li><a class="dropdown-item" href="#">Componentes</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="quienessomos.html" style="color: white;">Quiénes somos</a>
+                    </li>
+                </ul>
+                <!--CUENTA-->
+                <div id="divCuenta" class="d-flex align-items-center" style="margin-right: 50px;">
+                    <a href="#" role="button" data-bs-toggle="modal" data-bs-target="#accountModal">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16" style="color: white; margin-bottom: 10px; margin-right: 5px;">
+                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                        </svg>
+                    </a>
+                    <h6 style="color: white;">Mi cuenta</h6>
+                </div>
+                <div id="divCuentaDetalles" class="d-none" style="z-index: 40;">
+                    <div id="myDropdown" class="dropdown-content">
+                        <a href="verMiInformacion.html">Ver mi información</a>
+                        <a href="verMisPedidos.html">Ver mis pedidos</a>
+                        <a href="login.html">Cerrar Sesión</a>
+                    </div>
+                </div>
+                <!--CARRITO-->
+                <div class="d-flex align-items-center" style="margin-right: 15px;" onclick="showCart()">
+                    <a href="#" role="button" aria-expanded="false" >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-cart-fill" viewBox="0 0 16 16" style="color: white; margin-bottom: 10px;">
+                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                          </svg>
+                    </a>
+                    <p class="count-product">0</p>
+                    <h6 style="color: white;">Carrito</h6>
+                </div>
+                <div class="cart-products" id="products-id">
+                    <p class="close-btn" onclick="closeBtn()">X</p>
+                    <h3>Mi carrito</h3>
+                    <div class="card-items">
+                    </div>
+                    <h2>Total: S/.<strong class="price-total">0</strong></h2>
+                    <button class="btn btn-success" id="buy-button" disabled>Comprar</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+   
+    <div class="container mt-5">
+        <div class="row" style="margin-top: 100px;">
+            <div class="col-md-8">
+                <h2 style="margin-bottom: 50px;">Formulario de Compra</h2>
+                <form>
+                    <div class="mb-3">
+                        <label for="direccion" class="form-label">Dirección de envío</label>
+                        <input type="text" class="form-control" id="direccion" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nombre-tarjeta" class="form-label">Nombre en la tarjeta</label>
+                        <input type="text" class="form-control" id="nombre-tarjeta" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="numero-tarjeta" class="form-label">Número de tarjeta</label>
+                        <input type="text" class="form-control" id="numero-tarjeta" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fecha-expiracion" class="form-label">Fecha de expiración</label>
+                        <input type="text" class="form-control" id="fecha-expiracion" placeholder="MM/AA" required>
+                    </div>
+                    <div class="mb-3" >
+                        <label for="cvv" class="form-label">CVV</label>
+                        <input type="text" class="form-control" id="cvv" required>
+                    </div>
+                    <button type="button" class="btn btn-success" id="btnConfirmar">Confirmar</button>
+                    <button type="button" class="btn btn-danger" id="btnCancelar">Cancelar</button>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Resumen del pedido</h5>
+                        <p class="card-text">Subtotal: <span id="subtotal">S/.0</span></p>
+                        <p class="card-text">Impuestos: <span id="impuestos">S/.0</span></p>
+                        <hr>
+                        <h5>Total: <span id="total">S/.0</span></h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer style="background-color: rgb(18, 33, 61); height: 100px; margin-top: 200px;">
+        <p class="author" style="color: white; display: inline-block; margin-left: 50%;">Proyecto</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="./js/carrito.js" ></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        let $divCuenta = document.getElementById("divCuenta");
+        let $divCuentaDetalles = document.getElementById("divCuentaDetalles");
+        let $btnConfirmar=document.getElementById("btnConfirmar");
+        let $btnCancelar=document.getElementById("btnCancelar");
+
+        $divCuenta.addEventListener("click", () => {
+         $divCuentaDetalles.classList.toggle("d-none");
+         });
+
+        function showCart(x){
+            document.getElementById("products-id").style.display = "block";
+        }
+        function closeBtn(){
+             document.getElementById("products-id").style.display = "none";
+        }
+
+        window.addEventListener("click", (event) => {
+        if (!event.target.closest('#divCuenta') && !event.target.closest('#divCuentaDetalles')) {
+            $divCuentaDetalles.classList.add("d-none");
+        }
+         });
+
+        $btnConfirmar.addEventListener("click",()=>{
+            Swal.fire({
+            title: "Tu compra ha sido realizado con exito!",
+             text: "Estaremos informandote de tu pedido.",
+             icon: "success",
+             confirmButtonText:"OK"
+            }).then((result)=>{
+                if(result.isConfirmed){
+                    window.location.href="index.html";
+                }
+            });
+        })
+
+        $btnCancelar.addEventListener("click", ()=>{
+            Swal.fire({
+         title: "Estás seguro?",
+          text: "No podrás revertir esto",
+        icon: "warning",
+        showCancelButton: true,
+         confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sí, quiero cancelar!",
+        cancelButtonText: "No :("
+        }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href="index.html";
+    }
+    });
+        })
+    </script>
+</body>
+</html>
