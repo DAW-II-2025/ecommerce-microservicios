@@ -8,7 +8,7 @@
 		<artifactId>ecommerce-hs</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<groupId>com.example</groupId>
+	<groupId>com.example.pro</groupId>
 	<artifactId>msvc-carrito-bot</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>msvc-carrito-bot</name>
@@ -134,13 +134,15 @@
 		</dependencies>
 	</dependencyManagement>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+	 <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
 </project>

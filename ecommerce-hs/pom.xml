@@ -2,7 +2,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>pe.cibertec</groupId>
+	<groupId>pe.edu.cibertec</groupId>
 	<artifactId>ecommerce-hs</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<description>curso kubernetes cibertec ecommerce msvc</description>
@@ -10,6 +10,7 @@
 	<modules>
 		<module>msvc-admin</module>
 		<module>msvc-archivos</module>
+		<module>msvc-auth</module>
 		<module>msvc-carrito-bot</module>
 	</modules>
 	<parent>

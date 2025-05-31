@@ -12,7 +12,7 @@ import lombok.Data;
 public class Producto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int IdProducto;
+    private Integer IdProducto;
     @Column(unique = true)
     private String descripcion;
     private double PrecioUnidad;

@@ -9,11 +9,11 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import com.mercadopago.MercadoPago;
 @EnableFeignClients(basePackages = "com.example.pro.client")
 @SpringBootApplication
-public class CarritoadminApplication implements CommandLineRunner {
+public class MsvcCarritoBotApplication implements CommandLineRunner {
     	@Value("${MP_ACCESS_TOKEN}")
     	private String accesToken;
 	public static void main(String[] args) {
-		SpringApplication.run(CarritoadminApplication.class, args);
+		SpringApplication.run(MsvcCarritoBotApplication.class, args);
 	}
 
 	@Override
