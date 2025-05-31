@@ -5,8 +5,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>pe.edu.cibertec</groupId>
-	<artifactId>ecommerce-hs</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+		<artifactId>ecommerce-hs</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<groupId>pe.edu.cibertec.carrito</groupId>
 	<artifactId>msvc-carrito-bot</artifactId>

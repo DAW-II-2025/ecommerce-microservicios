@@ -51,7 +51,7 @@ public class ProductoRestController {
 	}
 	
 	@PutMapping("/actualizar/{id}")
-	public ResponseEntity<?> actualziar(@PathVariable Integer id, @RequestBody Producto pro) {
+	public ResponseEntity<?> actualizar(@PathVariable Integer id, @RequestBody Producto pro) {
 		try {
 			return _ProductoServices.guardarProducto(pro);
 		} catch (Exception e) {
