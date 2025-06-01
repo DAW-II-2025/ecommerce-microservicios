@@ -10,7 +10,6 @@
 	<modules>
 		<module>msvc-admin</module>
 		<module>msvc-archivos</module>
-		<module>msvc-auth</module>
 		<module>msvc-carrito-bot</module>
 	</modules>
 	<parent>
