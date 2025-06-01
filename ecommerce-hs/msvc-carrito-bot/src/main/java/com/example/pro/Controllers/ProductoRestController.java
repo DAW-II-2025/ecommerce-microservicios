@@ -59,5 +59,24 @@ public class ProductoRestController {
 					.body(Map.of("error", "Error interno: " + e.getMessage()));
 		}
 	}
+	
+	@PutMapping("/desactivar/{id}")
+	public ResponseEntity<?> desactivar(@PathVariable Integer id) {
+		
+		try {
+			return _ProductoServices.desactivarProducto(id);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(Map.of("error", "Error interno: " + e.getMessage()));		}
+	}
+	@PutMapping("/desactivar/{id}")
+	public ResponseEntity<?> activar(@PathVariable Integer id) {
+		
+		try {
+			return _ProductoServices.activarProducto(id);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(Map.of("error", "Error interno: " + e.getMessage()));		}
+	}
 
 }

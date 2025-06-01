@@ -15,5 +15,7 @@ public interface IProductoServices {
     Page<Producto> GetAllProductos(String nombre, String categoria, Pageable pageable);
      Producto getById(int producto);
 	ResponseEntity<?> guardarProducto(Producto pro);
-	ResponseEntity<?> crearProducto(Producto pro);    
+	ResponseEntity<?> crearProducto(Producto pro);
+	ResponseEntity<?> desactivarProducto(Integer id);
+	ResponseEntity<?> activarProducto(Integer id);    
 }

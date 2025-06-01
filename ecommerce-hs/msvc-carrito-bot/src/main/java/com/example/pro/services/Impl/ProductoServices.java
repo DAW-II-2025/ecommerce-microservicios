@@ -87,4 +87,26 @@ public class ProductoServices implements IProductoServices {
 		return ResponseEntity.status(HttpStatus.CREATED).body(nuevo);
 	}
 
+	@Override
+	public ResponseEntity<?> desactivarProducto(Integer id) {
+		Optional<Producto> optional = _productoRepository.findById(id);
+		if (optional.isPresent()) {
+			Producto pro = optional.orElseThrow();
+			pro.setEstado("D");
+			return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "Producto desactivado"));
+		}
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Producto no encontrado"));
+	}
+
+	@Override
+	public ResponseEntity<?> activarProducto(Integer id) {
+		Optional<Producto> optional = _productoRepository.findById(id);
+		if (optional.isPresent()) {
+			Producto pro = optional.orElseThrow();
+			pro.setEstado("A");
+			return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "Producto activado"));
+		}
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Producto no encontrado"));	
+	}
+
 }
