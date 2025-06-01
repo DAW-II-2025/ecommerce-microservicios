@@ -1,1 +1,88 @@
-<!-- esto esta de prueba tu ve so lo usas o le cambias de nombre!-->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{layout/layout :: head}"></head>
+
+<body id="page-top">
+<header th:replace="~{layout/layout :: header}"></header>
+
+<div class="cotainer-fluid p-4 g-8">
+    <div class="content mx-5">
+        <div class="card shadow mx-5 w-auto">
+            <div class="card-header">
+                <div>
+                    <h5 class="text-primary">
+                        MATERIALES <a class="btn btn-success" data-bs-toggle="modal"
+                                      data-bs-target="#save" th:data-id="${0}"> <i
+                            class="fa-solid fa-folder-plus"></i>
+                    </a>
+                    </h5>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive text-center">
+                    <table class="table table-sm table-bordered ">
+                        <thead class="bg-dark text-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>NOMBRE</th>
+                            <th>STOCK</th>
+                            <th>CATEGORIA</th>
+                            <th>ACCIONES</th>
+                        </tr>
+                        </thead>
+                        <tbody th:each="producto : ${productos}">
+                        <tr>
+                            <td th:text="${producto.idProducto}"></td>
+                            <td th:text="${producto.nombre}"></td>
+                            <td th:text="${producto.stock}"></td>
+                            <td th:text="${producto.categoria}"></td>
+                            <td><a class="btn btn-warning" data-bs-toggle="modal"
+                                   data-bs-target="#save" th:data-id="${producto.idProducto}"><i
+                                    class="fa-solid fa-pen-clip"></i></a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<div th:replace="~{layout/layout :: script}"></div>
+
+<!-- Logout Modal-->
+<div class="modal fade" id="save" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg-custom" role="document">
+        <div class="modal-content" id="modalBody"></div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#save').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget);
+            var productoId = button.data('id');
+            var modal = $(this);
+            $.ajax({
+                url: '/mantenimiento/producto/' + productoId,
+                method: 'GET',
+                success: function(data) {
+                    modal.find('.modal-content').html(data);
+                },
+                error: function() {
+                    modal.find('.modal-content').html('<p>Error al cargar los detalles.</p>');
+                }
+            });
+        });
+    });
+</script>
+</body>
+
+</html>
