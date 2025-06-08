@@ -1,14 +1,12 @@
 package pe.edu.cibertec.dto.producto;
 
 
-
 public record ProductoDTO(
-         Integer IdProducto,
-         String descripcion,
-         double PrecioUnidad,
-         int Stock,
-         String categoria,
-         String Imagen,
-         String Estado
-) {
-}
+        Integer idProducto,
+        String descripcion,
+        double precioUnidad,
+        int stock,
+        String categoria,
+        String imagen,
+        String estado
+) {}

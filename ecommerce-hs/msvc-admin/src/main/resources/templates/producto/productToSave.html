@@ -1,56 +1,83 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<div th:if="${productTosave!=null}">
 
+<head>
+    <meta charset="UTF-8">
+    <title>Producto</title>
+    <!-- Aquí puedes agregar tus enlaces a Bootstrap u otros recursos -->
+</head>
+
+<body>
+
+<div>
     <div class="modal-header bg-dark text-info">
         <h5 class="modal-title" id="exampleModalLabel">
-            <strong th:text="${productTosave.IdProducto!=null? 'Editar Producto' : 'Nuevo Producto'}" ></strong>
+            <strong>Nuevo Producto</strong>
         </h5>
         <button class="btn-close bg-danger" type="button" data-bs-dismiss="modal"
                 aria-label="Close">
             <span aria-hidden="true">×</span>
         </button>
     </div>
-    <div class="modal-body" >
-        <form method="post" th:action="@{/mantenimiento/producto}" class="g-3"
-              th:object="${productTosave}">
 
-            <div class="mb-3 row" th:if="${productTosave.IdProducto!=null}">
-                <label class="col-sm-2 col-form-label"> Id Producto:</label>
-                <div class=" col-sm-10">
-                    <input th:field="*{IdProducto}" type="number" class="form-control"
-                           readonly required>
-                </div>
-            </div>
+    <div class="modal-body">
+        <form method="post" th:action="@{/mantenimiento/guardar}" class="g-3"
+              th:object="${productToSave}">
+
+
             <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label"> Nombre:</label>
-                <div class=" col-sm-10">
+                <label class="col-sm-2 col-form-label">Nombre:</label>
+                <div class="col-sm-10">
                     <input th:field="*{descripcion}" type="text" class="form-control" required>
                 </div>
             </div>
+
             <div class="mb-3 row">
                 <label class="col-sm-2 col-form-label">Precio Unitario:</label>
-                <div class=" col-sm-10">
-                    <input th:field="*{PrecioUnidad}" type="number" step="1.0" min="0"
+                <div class="col-sm-10">
+                    <input th:field="*{precioUnidad}" type="number" step="0.01" min="0"
                            class="form-control" required>
                 </div>
             </div>
+
             <div class="mb-3 row">
                 <label class="col-sm-2 col-form-label">Stock:</label>
-                <div class=" col-sm-10">
-                    <input th:field="*{Stock}" type="number" step="1.0" min="0"
+                <div class="col-sm-10">
+                    <input th:field="*{stock}" type="number" step="1.0" min="0"
                            class="form-control" required>
                 </div>
             </div>
+
             <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label">Categoria: </label>
-                <div class=" col-sm-10">
+                <label class="col-sm-2 col-form-label">Categoria:</label>
+                <div class="col-sm-10">
                     <input th:field="*{categoria}" type="text"
                            class="form-control" required>
                 </div>
             </div>
-            <button type="submit" class="btn btn-success">GUARDAR</button>
+
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label">Estado:</label>
+                <div class="col-sm-10">
+                    <input th:field="*{estado}" type="text"
+                           class="form-control" required>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-2 col-form-label">Imagen:</label>
+                <div class="col-sm-10">
+                    <input th:field="*{imagen}" type="text"
+                           class="form-control" required>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-success">GUARDAR</button>
+            </div>
         </form>
     </div>
 </div>
+
+</body>
 </html>

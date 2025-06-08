@@ -12,11 +12,11 @@ import pe.edu.cibertec.model.chat.Message;
 @Controller
 public class MessageController {
 	
-	@MessageMapping("/message")
+	/*@MessageMapping("/message")
 	@SendTo("/chat/message")
 	public Message recibeMessage(Message message) {
 		message.setFecha(LocalDate.now().toString());
 		message.setHora(LocalTime.now().toString());
 		return message;
-	}
+	}*/
 }

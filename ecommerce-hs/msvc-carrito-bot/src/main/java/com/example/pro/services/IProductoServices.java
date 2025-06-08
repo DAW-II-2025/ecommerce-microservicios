@@ -12,9 +12,9 @@ public interface IProductoServices {
    
     Optional<Producto> FindProductoByNombre(String nombre);
     Integer updateProducto(Integer id, Producto producto);
-    Page<Producto> GetAllProductos(String nombre, String categoria, Pageable pageable);
+    Page<Producto> GetAllProductos(String nombre, String categoria, boolean mostrarInactivos, Pageable pageable);
      Producto getById(int producto);
-	ResponseEntity<?> guardarProducto(Producto pro);
+	ResponseEntity<?> guardarProducto(Integer id, Producto pro);
 	ResponseEntity<?> crearProducto(Producto pro);
 	ResponseEntity<?> desactivarProducto(Integer id);
 	ResponseEntity<?> activarProducto(Integer id);    
