@@ -1,10 +1,13 @@
 package pe.edu.cibertec.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import pe.edu.cibertec.model.ConversationDTO;
 import pe.edu.cibertec.model.entity.Conversation;
 import pe.edu.cibertec.model.entity.Message;
 import pe.edu.cibertec.service.IMessageService;
@@ -33,6 +36,11 @@ public class MessageController {
 	@GetMapping("/conversation/{id}")
 	public Conversation getMethodName(@PathVariable String id) {
 		return service.findConversationById(id);
+	}
+	
+	@GetMapping("/conversations")
+	public List<ConversationDTO> getConversations() {
+		return service.findAllConversations();
 	}
 	
 	

@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.pro.services.IWhatsappServices;
 
-import com.example.pro.services.IDialogflowService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 import org.springframework.http.MediaType;
@@ -23,7 +23,7 @@ public class WebhookMetaController {
 	
 
 	@Autowired
-	private IDialogflowService _DialogflowService;
+	private IWhatsappServices _DialogflowService;
 	private static final String VERIFY_TOKEN = "verifica123";
 
 	@GetMapping

@@ -11,6 +11,10 @@ import lombok.Data;
 @Data
 public class Conversation {
 	@Id
-	private String chatId;
+	private String chatId;	
 	private List<Message> messages;
+	
+	public Message getLastMessage() {
+		return messages.isEmpty()? null: messages.get(messages.size()-1);
+	}
 }

@@ -10,6 +10,6 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 @FeignClient(name = "msvc-archivos", url = "localhost:8083")
 public interface ArchivosClient {
 
-	@PostMapping
+	@PostMapping("/archivos/message")
 	ResponseEntity<?> guardarMensaje(@RequestBody MessageArchivos message); 
 }
