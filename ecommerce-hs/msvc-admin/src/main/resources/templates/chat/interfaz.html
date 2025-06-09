@@ -1,1 +1,126 @@
-<!-- esto esta de prueba tu ve so lo usas o le cambias de nombre!-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Página de Chats</title>
+    <style>
+        body {
+            display: flex;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        #sidebar {
+            width: 250px;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-right: 1px solid #ccc;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        #sidebar div {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #ddd;
+        }
+        #sidebar div:hover {
+            background-color: #e0e0e0;
+        }
+        #chat {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+        }
+        #messages {
+            flex: 1;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+</head>
+<body>
+
+    <div id="sidebar">
+        <h3>Chats</h3>
+        <div onclick="selectChat('chat1')">Chat 1</div>
+        <div onclick="selectChat('chat2')">Chat 2</div>
+        <div onclick="selectChat('chat3')">Chat 3</div>
+    </div>
+
+    <div id="chat">
+        <h2 id="currentChatTitle">Selecciona un chat</h2>
+
+        <div id="messages"></div>
+
+        <input type="text" id="sender" placeholder="Sender"><br>
+        <input type="text" id="sms" placeholder="Message"><br>
+        <button onclick="sendMessage()">Send Message</button>
+    </div>
+
+    <script>
+        var stompClient = null;
+        var currentChatId = null;
+        var currentSubscription = null;
+
+        function connect() {
+            var socket = new SockJS('/ws-chat');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function (frame) {
+                console.log('Connected: ' + frame);
+               
+            });
+        }
+
+        function selectChat(chatId) {
+            currentChatId = chatId;
+            document.getElementById('currentChatTitle').innerText = "Chat: " + chatId;
+            document.getElementById('messages').innerHTML = "";
+
+            if (currentSubscription !== null) {
+                currentSubscription.unsubscribe();
+            }
+
+            currentSubscription = stompClient.subscribe('/chat/message', function (message) {
+                var msg = JSON.parse(message.body);
+                if (msg.chatId === currentChatId) {
+                    showMessage(msg);
+                }
+            });
+
+            stompClient.send("/app/chat", {}, JSON.stringify({ chatId: chatId }));
+        }
+
+        function sendMessage() {
+            if (currentChatId === null) {
+                alert("Selecciona un chat primero.");
+                return;
+            }
+
+            var message = {
+                chatId: currentChatId,
+                sms: document.getElementById('sms').value,
+                sender: document.getElementById('sender').value
+            };
+
+            stompClient.send("/app/message", {}, JSON.stringify(message));
+
+            document.getElementById('sms').value = "";
+        }
+
+        function showMessage(message) {
+            var response = document.getElementById('messages');
+            var li = document.createElement('div');
+            li.appendChild(document.createTextNode(message.hora + " " + message.sender + ": " + message.sms));
+            response.appendChild(li);
+            response.scrollTop = response.scrollHeight;
+        }
+
+        connect();
+    </script>
+
+</body>
+</html>
