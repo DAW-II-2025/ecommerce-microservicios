@@ -69,7 +69,7 @@ public class ProductoRestController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(Map.of("error", "Error interno: " + e.getMessage()));		}
 	}
-	@PutMapping("/desactivar/{id}")
+	@PutMapping("/activar/{id}")
 	public ResponseEntity<?> activar(@PathVariable Integer id) {
 		
 		try {

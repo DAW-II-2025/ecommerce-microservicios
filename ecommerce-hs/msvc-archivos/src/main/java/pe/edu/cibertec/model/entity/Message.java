@@ -4,12 +4,13 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Data;
-
+@Document
 @Data
-@Document(collection = "comprobantes")
-public class PagoCompribante{
+public class Message {
 	@Id
-	private String idArchivo;
-	private Integer idPago;
-	
+	private String messageId;	
+	private String sms;
+	private String sender;
+	private String fecha;	
+	private String hora;
 }

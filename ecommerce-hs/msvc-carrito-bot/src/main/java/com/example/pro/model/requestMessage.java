@@ -1,5 +1,6 @@
 package com.example.pro.model;
 
+import com.example.pro.DTO.metaDTOs.ImageMessage;
 import com.example.pro.DTO.metaDTOs.Text;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.pro.DTO.metaDTOs.ImageMessage;
 import com.example.pro.DTO.metaDTOs.Text;
 import com.example.pro.client.WhatsappClient;
 import com.example.pro.client.WhatsappMultipartClient;
-import com.example.pro.model.ImageMessage;
 import com.example.pro.model.requestMessage;
 import com.example.pro.services.IWhatsappServices;
 import com.example.pro.utils.ByteArrayMultipartFile;

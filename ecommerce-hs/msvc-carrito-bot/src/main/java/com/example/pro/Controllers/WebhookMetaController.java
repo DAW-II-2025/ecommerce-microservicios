@@ -1,7 +1,5 @@
 package com.example.pro.Controllers;
 
-import java.io.BufferedReader;
-import java.util.Enumeration;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,25 +11,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.pro.DTO.metaDTOs.Change;
-import com.example.pro.DTO.metaDTOs.Entry;
-import com.example.pro.DTO.metaDTOs.MetaWebhookRequest;
-import com.example.pro.DTO.metaDTOs.Value;
-import com.example.pro.services.IDialogflowService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.example.pro.services.IDialogflowService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.MediaType;
 
 @RestController
 @RequestMapping("/webhook")
 public class WebhookMetaController {
-	@Autowired
-	private ObjectMapper objectMapper;
+	
 
 	@Autowired
 	private IDialogflowService _DialogflowService;

@@ -1,4 +1,4 @@
-package com.example.pro.model;
+package com.example.pro.DTO.metaDTOs;
 
 import lombok.Data;
 

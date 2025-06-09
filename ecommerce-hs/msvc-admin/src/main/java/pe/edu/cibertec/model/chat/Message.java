@@ -8,5 +8,5 @@ public class Message {
 	private String sender;
 	private String chatId;
 	private String fecha;	
-	private String hora;	
+	private String hora;
 }
