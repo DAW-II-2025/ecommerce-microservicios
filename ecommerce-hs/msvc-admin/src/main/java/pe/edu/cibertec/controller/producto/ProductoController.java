@@ -21,31 +21,45 @@ public class ProductoController {
     public String listarProductos(@RequestParam(required = false) String nombre,
                                   @RequestParam(required = false) String categoria,
                                   @RequestParam(defaultValue = "0") int page,
-                                  Model model){
-        PageDTO<ProductoDTO> productosPage = _productoClient.getProductos(nombre, categoria, page);
+                                  @RequestParam(defaultValue = "false") boolean mostrarInactivos,
+                                  Model model) {
+        PageDTO<ProductoDTO> productosPage = _productoClient.getProductos(nombre, categoria, page, mostrarInactivos);
 
         model.addAttribute("productosPage", productosPage);
+        model.addAttribute("productos", productosPage.getContent());
         model.addAttribute("nombre", nombre);
         model.addAttribute("categoria", categoria);
+        model.addAttribute("mostrarInactivos", mostrarInactivos);
         model.addAttribute("page", page);
-        return "listado";
-    }
-    @GetMapping("/producto/{id}")
-    public String getProductoById(@PathVariable Integer id, Model model) {
-        model.addAttribute("productTosave", _productoClient.getProductoById(id));
-        return "productTosave";
+        return "producto/listado";
     }
 
-    /*@GetMapping("/nuevo")
+    @GetMapping("/producto/detalle/{id}")
+    public String getProductoById(@PathVariable Integer id, Model model) {
+        if (id == 0) {
+            ProductoDTO nuevoProducto = new ProductoDTO(0, "", 0.0, 0, "", "", "");
+            model.addAttribute("productToSave", nuevoProducto);
+            return "producto/productToSave";
+        } else {
+            model.addAttribute("productToUpdate", _productoClient.getProductoById(id));
+            return "producto/productToUpdate";
+        }
+    }
+
+
+    @GetMapping("/nuevo")
     public String mostrarFormularioNuevo(Model model){
         model.addAttribute("producto", new Producto());
-        return "admin/productos/formulario";
-    }*/
+        return "producto/productToSave";
+    }
 
     @PostMapping("/guardar")
     public String guardarProducto(@ModelAttribute ProductoDTO producto, RedirectAttributes flash) {
         if(_productoClient.crearProducto(producto)!=null)
-            flash.addFlashAttribute("success",String.format(" El producto %s con ID: %d, se guardó con éxito", producto.descripcion(), producto.IdProducto()));
+            flash.addFlashAttribute("success", String.format(
+                    "El producto %s, se guardó con éxito",
+                    producto.descripcion()
+            ));
         else
             flash.addFlashAttribute("error", "error al guardar producto");
         return "redirect:/mantenimiento/productos";
@@ -61,10 +75,38 @@ public class ProductoController {
     @PostMapping("/actualizar/{id}")
     public String actualizarProducto(@PathVariable Integer id, @ModelAttribute ProductoDTO producto,RedirectAttributes flash) {
         if(_productoClient.actualizarProducto(id, producto)!=null){
-            flash.addFlashAttribute("success",String.format(" El producto %s con ID: %d, se actualizó con éxito", producto.descripcion(), producto.IdProducto()));
+            flash.addFlashAttribute("success",String.format(" El producto %s con ID: %d, se actualizó con éxito", producto.descripcion(), producto.idProducto()));
         }
         else
             flash.addFlashAttribute("error", "error al actualizar producto");
+        return "redirect:/mantenimiento/productos";
+    }
+
+    @GetMapping("/desactivar/{id}")
+    public String desactivarProducto(@PathVariable Integer id, RedirectAttributes flash) {
+        ProductoDTO producto = _productoClient.getProductoById(id);
+        if(_productoClient.desactivarProducto(id)!=null) {
+            flash.addFlashAttribute("success", String.format(
+                    "El producto %s con ID: %d, se eliminó con éxito",
+                    producto.descripcion(), producto.idProducto()
+            ));
+        } else {
+            flash.addFlashAttribute("error", "error al eliminar producto");
+        }
+        return "redirect:/mantenimiento/productos";
+    }
+
+    @GetMapping("/activar/{id}")
+    public String activarProducto(@PathVariable Integer id, RedirectAttributes flash) {
+        ProductoDTO producto = _productoClient.getProductoById(id);
+        if(_productoClient.activarProducto(id)!=null) {
+            flash.addFlashAttribute("success", String.format(
+                    "El producto %s con ID: %d, se activó con éxito",
+                    producto.descripcion(), producto.idProducto()
+            ));
+        } else {
+            flash.addFlashAttribute("error", "error al activar producto");
+        }
         return "redirect:/mantenimiento/productos";
     }
 

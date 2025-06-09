@@ -94,7 +94,7 @@ public class SpringSecurityConfig {
 	System.err.println(passwordEncoder().encode("admin"));
 	return http.authorizeHttpRequests((authz) -> authz
 		// TODOS LOS USUARIOS
-		.requestMatchers("/", "/login", "/Producto/list", "/swagger-ui/**", "/Cliente/add", "/Cliente/verificar-correo")
+		.requestMatchers("/", "/login", "/Producto/list","/Producto/**", "/swagger-ui/**", "/Cliente/add", "/Cliente/verificar-correo")
 		.permitAll().requestMatchers(HttpMethod.POST, "/pago/crear-preferencia").hasAnyRole("CLIENTE")
 		.requestMatchers(HttpMethod.GET, "/Cliente/**").hasAnyRole("CLIENTE")
 		.requestMatchers(HttpMethod.POST, "/Cliente/**").hasAnyRole("CLIENTE")

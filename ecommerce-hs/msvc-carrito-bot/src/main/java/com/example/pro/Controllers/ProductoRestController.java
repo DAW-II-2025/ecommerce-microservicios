@@ -1,6 +1,7 @@
 package com.example.pro.Controllers;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,11 +33,14 @@ public class ProductoRestController {
 	}
 
 	@GetMapping("/list")
-	public Page<Producto> getProducts(@RequestParam(required = false) String nombre,
-			@RequestParam(required = false) String categoria, @RequestParam(defaultValue = "0") int page) {
-		Pageable pageable = PageRequest.of(page, 12);
-		return _ProductoServices.GetAllProductos(nombre, categoria, pageable);
+	public Page<Producto> getProducts(
+			@RequestParam(required = false) String nombre,
+			@RequestParam(required = false) String categoria,
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "false") boolean mostrarInactivos) {
 
+		Pageable pageable = PageRequest.of(page, 12);
+		return _ProductoServices.GetAllProductos(nombre, categoria, mostrarInactivos, pageable);
 	}
 
 	@PostMapping("/guardar")
@@ -53,7 +57,7 @@ public class ProductoRestController {
 	@PutMapping("/actualizar/{id}")
 	public ResponseEntity<?> actualizar(@PathVariable Integer id, @RequestBody Producto pro) {
 		try {
-			return _ProductoServices.guardarProducto(pro);
+			return _ProductoServices.guardarProducto(id, pro);
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(Map.of("error", "Error interno: " + e.getMessage()));
@@ -77,6 +81,16 @@ public class ProductoRestController {
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(Map.of("error", "Error interno: " + e.getMessage()));		}
+	}
+	@GetMapping("/{id}")
+	public ResponseEntity<?> getProductoById(@PathVariable Integer id) {
+		try {
+			Producto producto = _ProductoServices.getById(id);
+			return ResponseEntity.ok(producto);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(Map.of("error", "Error interno: " + e.getMessage()));
+		}
 	}
 
 }

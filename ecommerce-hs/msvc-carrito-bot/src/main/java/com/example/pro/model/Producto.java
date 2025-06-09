@@ -19,16 +19,16 @@ public class Producto {
     private int Stock;
     private String categoria;
     private String Imagen;
-    private String Estado;
+    private String estado;
 
-    public Producto(int idProducto, String descripcion, double precioUnidad, int stock, String imagen, String estado) {
+    public Producto(int idProducto, String descripcion, double precioUnidad, int stock, String imagen, String _estado) {
 	super();
 	IdProducto = idProducto;
 	this.descripcion = descripcion;
 	PrecioUnidad = precioUnidad;
 	Stock = stock;
 	Imagen = imagen;
-	Estado = estado;
+	estado = _estado;
     }
 
     public Producto() {
