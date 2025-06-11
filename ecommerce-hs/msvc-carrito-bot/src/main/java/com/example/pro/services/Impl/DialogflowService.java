@@ -9,18 +9,21 @@ import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class DialogflowService implements IDialogflowService {
 
-	private final IWhatsappServices _Client;
-
-	private final SessionsClient sessionsClient;
+	@Autowired
+	@Lazy
+	private IWhatsappServices _Client;
+@Autowired
+	private SessionsClient sessionsClient;
 
 	private static final String projectId = "milo-wffb";	
 

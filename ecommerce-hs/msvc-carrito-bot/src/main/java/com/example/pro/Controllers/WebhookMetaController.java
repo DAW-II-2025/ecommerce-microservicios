@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.pro.services.IWhatsappServices;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.MediaType;
 
@@ -39,8 +40,8 @@ public class WebhookMetaController {
 	}
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> receiveWebhook(@RequestBody Map<String, Object> body) {
-		return _DialogflowService.webhookMeta(body);
+	public ResponseEntity<String> receiveWebhook(HttpServletRequest request) {
+		return _DialogflowService.webhookMeta(request);
 	}
 
 }

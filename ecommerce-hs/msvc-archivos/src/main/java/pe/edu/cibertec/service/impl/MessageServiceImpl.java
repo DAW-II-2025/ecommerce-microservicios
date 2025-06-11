@@ -34,7 +34,7 @@ public class MessageServiceImpl implements IMessageService{
 		message.setFecha(LocalDate.now().format(formatter));
 		message.setHora(LocalTime.now().format(formattertime));
 		
-		String id = "num-bot-".concat(message.getSender());
+		String id = message.getChatId();
 		Optional<Conversation> op = _ConverationRepository.findById(id);
 		if (op.isPresent()) {			
 			Conversation conversation = op.get();

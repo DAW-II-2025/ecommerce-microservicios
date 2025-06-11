@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="head">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
     <meta charset="UTF-8">
     <title th:if="${titulo!=null}" th:text="${titulo}"></title>
     <!-- Bootstrap CSS -->
@@ -28,9 +28,9 @@
             <div class="collapse navbar-collapse " id="navbarNavDropdown">
                 <ul class="navbar-nav">
                     <li class="nav-item"><a class="nav-link active text-info"
-                                            aria-current="page" href="#">Productos</a></li>
+                                            aria-current="page" th:href="@{/mantenimiento/productos}">Productos</a></li>
                     <li class="nav-item"><a class="nav-link active text-success"
-                                            aria-current="page" href="#">Bot</a></li>
+                                            aria-current="page" th:href="@{/chat}">Bot</a></li>
                 </ul>
             </div>
         </div>

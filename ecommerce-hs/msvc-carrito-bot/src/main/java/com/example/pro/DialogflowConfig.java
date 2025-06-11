@@ -20,6 +20,7 @@ public class DialogflowConfig {
 
     @Bean
     public SessionsClient sessionsClient() throws IOException {
+    	System.out.println("credenciales: " +pathCredencial );
         Path jsonPath = Path.of(pathCredencial);
         GoogleCredentials credentials = GoogleCredentials.fromStream(Files.newInputStream(jsonPath));
         

@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 
@@ -46,6 +46,7 @@ public class PaymentService implements IPaymentService {
     @Autowired
     private IReporteServices _IReporteServices;    
     @Autowired
+    @Lazy
     private IWhatsappServices _IWhatsappServices; 
     @Autowired
     private Gson gson;

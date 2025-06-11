@@ -1,5 +1,6 @@
 package com.example.pro.services.Impl;
 
+import java.io.BufferedReader;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import feign.FeignException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -50,7 +52,7 @@ public class WhatsappServices implements IWhatsappServices {
 		requestMessage requestbody = new requestMessage(telefono, "text", null, text);
 		ResponseEntity<Map<String, Object>> response = client.sendMesagge("Bearer ".concat(auth), requestbody);
 		if (response.getStatusCode().equals(HttpStatus.OK))
-			archivosClient.guardarMensaje(new MessageArchivos(msg, telefono));
+			archivosClient.guardarMensaje(new MessageArchivos(msg,"yo", telefono));
 	}
 
 	@Override
@@ -76,20 +78,20 @@ public class WhatsappServices implements IWhatsappServices {
 	}
 
 	@Override
-	public ResponseEntity<String> webhookMeta(Map<String, Object> body) {
+	public ResponseEntity<String> webhookMeta(HttpServletRequest request) {
 		try {
-//			StringBuilder buffer = new StringBuilder();
-//			BufferedReader reader = request.getReader();
-//			String line;
-//			while ((line = reader.readLine()) != null) {
-//				buffer.append(line);
-//			}
-//			String jsonBody = buffer.toString();
-//
-//			System.out.println("📥 Received webhook: " + jsonBody);
+			StringBuilder buffer = new StringBuilder();
+			BufferedReader reader = request.getReader();
+			String line;
+			while ((line = reader.readLine()) != null) {
+				buffer.append(line);
+			}
+			String jsonBody = buffer.toString();
+
+			System.out.println("📥 Received webhook: " + jsonBody);
 
 			ObjectMapper mapper = new ObjectMapper();
-			JsonNode rootNode = mapper.valueToTree(body);
+			JsonNode rootNode = mapper.readTree(jsonBody);
 
 			if (rootNode.has("entry") && rootNode.get("entry").isArray() && rootNode.get("entry").size() > 0) {
 
@@ -118,7 +120,7 @@ public class WhatsappServices implements IWhatsappServices {
 
 							System.out.println("👤 Nombre: " + nombre);
 							_DialogflowService.sendDialogFlow(telefono, nombre, mensaje);
-							archivosClient.guardarMensaje(new MessageArchivos(mensaje, telefono));
+							archivosClient.guardarMensaje(new MessageArchivos(mensaje, telefono, telefono));
 
 						}
 					}
