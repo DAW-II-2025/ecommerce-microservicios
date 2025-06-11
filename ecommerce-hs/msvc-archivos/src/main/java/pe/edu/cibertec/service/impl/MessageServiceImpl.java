@@ -17,6 +17,7 @@ import pe.edu.cibertec.model.ConversationDTO;
 import pe.edu.cibertec.model.entity.Conversation;
 import pe.edu.cibertec.model.entity.Message;
 import pe.edu.cibertec.repository.IConverationRepository;
+import pe.edu.cibertec.service.IMessageNotificationService;
 import pe.edu.cibertec.service.IMessageService;
 
 @Service
@@ -26,20 +27,21 @@ public class MessageServiceImpl implements IMessageService{
 //	private final IMessageRepository _IMessageRepository;
 	private final IConverationRepository _ConverationRepository;
 	
+	private final IMessageNotificationService _IMessageNotificationService;
 	private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	private final DateTimeFormatter formattertime = DateTimeFormatter.ofPattern("HH:mm");
 
 	@Override
 	public ResponseEntity<?> guardarMensaje(Message message) {
 		message.setFecha(LocalDate.now().format(formatter));
-		message.setHora(LocalTime.now().format(formattertime));
-		
+		message.setHora(LocalTime.now().format(formattertime));		
 		String id = message.getChatId();
 		Optional<Conversation> op = _ConverationRepository.findById(id);
 		if (op.isPresent()) {			
 			Conversation conversation = op.get();
 			conversation.getMessages().add(message);
 			_ConverationRepository.save(conversation);
+			_IMessageNotificationService.envioNotificacion(message);
 			return ResponseEntity.status(HttpStatus.OK).body("se guardó el mensaje nuevo");
 		}		
 		Conversation conver = new Conversation();
@@ -47,6 +49,7 @@ public class MessageServiceImpl implements IMessageService{
 		conver.setMessages(new ArrayList<>());
 		conver.getMessages().add(message);
 		_ConverationRepository.save(conver);
+		_IMessageNotificationService.envioNotificacion(message);
 		return ResponseEntity.status(HttpStatus.CREATED).body("se creó el mensaje nuevo y la conversacion nueva");
 	}
 	@Override

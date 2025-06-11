@@ -46,7 +46,6 @@ public class PaymentService implements IPaymentService {
     @Autowired
     private IReporteServices _IReporteServices;    
     @Autowired
-    @Lazy
     private IWhatsappServices _IWhatsappServices; 
     @Autowired
     private Gson gson;

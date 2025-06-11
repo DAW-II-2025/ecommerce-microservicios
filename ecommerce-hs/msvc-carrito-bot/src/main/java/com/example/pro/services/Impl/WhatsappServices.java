@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,11 +49,12 @@ public class WhatsappServices implements IWhatsappServices {
 	public void sendMessage(String msg, String num) {
 		Text text = new Text();
 		text.setBody(msg);
-		String telefono = "51".concat(num.contains("+51") ? num.replace("+51", "") : num);
+		String telefono = num.replace("+", "");
+		System.out.println("whatsapp enviando : " + telefono);
 		requestMessage requestbody = new requestMessage(telefono, "text", null, text);
 		ResponseEntity<Map<String, Object>> response = client.sendMesagge("Bearer ".concat(auth), requestbody);
 		if (response.getStatusCode().equals(HttpStatus.OK))
-			archivosClient.guardarMensaje(new MessageArchivos(msg,"yo", telefono));
+			archivosClient.guardarMensaje(new MessageArchivos(msg, "yo", telefono));
 	}
 
 	@Override
@@ -119,9 +121,7 @@ public class WhatsappServices implements IWhatsappServices {
 									: "Desconocido";
 
 							System.out.println("👤 Nombre: " + nombre);
-							_DialogflowService.sendDialogFlow(telefono, nombre, mensaje);
-							archivosClient.guardarMensaje(new MessageArchivos(mensaje, telefono, telefono));
-
+							procesarWebhook(mensaje, telefono, nombre);
 						}
 					}
 				}
@@ -132,6 +132,20 @@ public class WhatsappServices implements IWhatsappServices {
 			System.err.println("❌ Error en webhook: " + e.getMessage());
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("ERROR");
+		}
+	}
+
+	@Async
+	public void procesarWebhook(String mensaje, String telefono, String nombre) {
+		try {
+			String dialogResponse = _DialogflowService.sendDialogFlow(telefono, nombre, mensaje);
+			ResponseEntity<?> responseArchivos = archivosClient
+					.guardarMensaje(new MessageArchivos(mensaje, telefono, telefono));
+			if (responseArchivos.getStatusCode().equals(HttpStatus.OK)) {
+				sendMessage(dialogResponse, telefono);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

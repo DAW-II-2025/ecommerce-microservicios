@@ -18,11 +18,8 @@ import java.util.UUID;
 @Service
 @Slf4j
 public class DialogflowService implements IDialogflowService {
-
+	
 	@Autowired
-	@Lazy
-	private IWhatsappServices _Client;
-@Autowired
 	private SessionsClient sessionsClient;
 
 	private static final String projectId = "milo-wffb";	
@@ -51,18 +48,21 @@ public class DialogflowService implements IDialogflowService {
 	}
 
 	@Override
-	public void sendDialogFlow(String telefono, String nombre, String mensaje) {
+	public String sendDialogFlow(String telefono, String nombre, String mensaje) {
 		if (telefono != null && nombre != null && mensaje != null) {
 			// guardando mensaje recibido
 			String responseDialog = detectIntent(mensaje, "es");
 			if (!responseDialog.equals("Error con Dialogflow")) {
 				try {
 					log.info("enviendo respuesta whatsapp mediante api...");
-					_Client.sendMessage(mensaje, telefono);
+					System.out.println("dialogflow: "+responseDialog );
+					return responseDialog;
 				} catch (FeignException e) {
 					System.err.println("error al enviar mensaje: ".concat(e.getMessage()));
+					return null;
 				}
 			}
 		}
+		return null;
 	}
 }

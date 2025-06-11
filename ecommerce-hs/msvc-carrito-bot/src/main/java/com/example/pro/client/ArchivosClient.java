@@ -11,5 +11,5 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 public interface ArchivosClient {
 
 	@PostMapping("/archivos/message")
-	ResponseEntity<?> guardarMensaje(@RequestBody MessageArchivos message); 
+	ResponseEntity<String> guardarMensaje(@RequestBody MessageArchivos message); 
 }

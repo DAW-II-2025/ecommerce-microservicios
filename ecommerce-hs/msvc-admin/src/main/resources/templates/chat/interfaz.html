@@ -137,6 +137,7 @@ body {
 
 			currentSubscription = stompClient.subscribe('/chat/' + chatId,
 					function(message) {
+						console.log("mensaje nuevo:", message)
 						var msg = JSON.parse(message.body);
 						if (msg.chatId === currentChatId) {
 							showMessage(msg);
