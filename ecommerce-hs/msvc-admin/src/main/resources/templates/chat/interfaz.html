@@ -52,11 +52,16 @@ body {
 					 th:data-id="${chat.chatId()}"
 					 onclick="selectChatFromElement(this)">
 					<div class="d-flex justify-content-between">
-						<span class="fw-bold text-truncate" th:text="${chat.chatId()}"></span>
-						<small class="text-muted" th:text="${chat.time()}"></small>
+  						<span class="fw-bold text-truncate" th:text="${chat.chatId()}"></span>
+  						<small class="text-muted" th:text="${chat.time()}"></small>
 					</div>
-					<div class="text-muted text-truncate" style="font-size: 0.9em;">
-						<span th:text="${chat.lastMessage()}"></span>
+					<div class="d-flex justify-content-between">
+  						<div class="text-muted text-truncate" style="font-size: 0.9em;">
+    						<span th:text="${chat.lastMessage()}"></span>
+  						</div>
+  						<div class="ms-2">
+    						<span class="badge bg-success text-white rounded-pill d-none" id="notif-${chat.chatId()}">1</span>
+  						</div>
 					</div>
 				</div>
 			</div>
@@ -95,6 +100,34 @@ body {
 		var stompClient = null;
 		var currentChatId = null;
 		var currentSubscription = null;
+		
+		const unreadCount = {};
+
+		function showNotification(chatId) {
+  		if (chatId === currentChatId) {
+    		return;
+  		}
+
+  		if (!unreadCount[chatId]) {
+    		unreadCount[chatId] = 0;
+  		}
+  		unreadCount[chatId]++;
+
+  		const badge = document.getElementById(`notif-${chatId}`);
+  		if (badge) {
+    		badge.textContent = unreadCount[chatId];
+    		badge.classList.remove('d-none');
+  		}
+	}
+
+		function clearNotification(chatId) {
+  			unreadCount[chatId] = 0;
+  		const badge = document.getElementById(`notif-${chatId}`);
+  		if (badge) {
+    		badge.classList.add('d-none');
+    		badge.textContent = '0';
+  		}
+	}
 
 		function connect() {
 			var socket = new SockJS('/chat-websocket');
@@ -110,6 +143,9 @@ body {
 		}
 		function selectChat(chatId) {
 			currentChatId = chatId;
+
+			// Limpia la notificación
+			clearNotification(chatId);
 			document.getElementById('currentChatTitle').innerText = "Chat: "
 					+ chatId;
 
@@ -140,7 +176,9 @@ body {
 						console.log("mensaje nuevo:", message)
 						var msg = JSON.parse(message.body);
 						if (msg.chatId === currentChatId) {
-							showMessage(msg);
+  							showMessage(msg);
+						} else {
+  							showNotification(msg.chatId);
 						}
 					});
 
