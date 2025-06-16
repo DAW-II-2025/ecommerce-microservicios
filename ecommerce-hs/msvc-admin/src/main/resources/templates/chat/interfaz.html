@@ -1,142 +1,197 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{layout/layout :: head}"></head>
+
 <head>
 
-<title>Página de Chats</title>
+	<title>Página de Chats</title>
 
-<script
-	src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
 </head>
 
 <style>
-body {
-	margin: 0;
-}
+	body {
+		margin: 0;
+	}
 
-#sidebar {
-	height: calc(100vh - 56px); /* Altura total menos navbar */
-	overflow-y: auto;
-	border-right: 1px solid #ccc;
-	padding: 1rem;
-	background-color: #f8f9fa;
-}
+	#sidebar {
+		height: calc(100vh - 56px);
+		/* Altura total menos navbar */
+		overflow-y: auto;
+		border-right: 1px solid #ccc;
+		padding: 1rem;
+		background-color: #f8f9fa;
+	}
 
-.chat-item:hover {
-	background-color: #f0f0f0;
-	cursor: pointer;
-}
+	.chat-item:hover {
+		background-color: #f0f0f0;
+		cursor: pointer;
+	}
 
-#messages {
-	background-color: #e5ddd5;
-	padding: 1rem;
-	overflow-y: auto;
-	flex: 1;
-}
+	#messages {
+		background-color: #e5ddd5;
+		padding: 1rem;
+		overflow-y: auto;
+		flex: 1;
+	}
 </style>
 </head>
+
 <body>
 
 	<!-- Navbar Bootstrap -->
 	<header th:replace="~{layout/layout :: header}"></header>
 
-<div class="container-fluid">
-	<div class="row">
+	<div class="container-fluid">
+		<div class="row">
 
-		<!-- Sidebar estilo WhatsApp -->
-		<div id="sidebar" class="col-md-5 bg-light border-end">
-			<h3 class="my-3">Chats</h3>
-			<div id="chat-list" th:each="chat : ${chats}" class="mb-2">
-				<div class="chat-item p-2 rounded bg-white shadow-sm mb-2"
-					 th:data-id="${chat.chatId()}"
-					 onclick="selectChatFromElement(this)">
-					<div class="d-flex justify-content-between">
-  						<span class="fw-bold text-truncate" th:text="${chat.chatId()}"></span>
-  						<small class="text-muted" th:text="${chat.time()}"></small>
-					</div>
-					<div class="d-flex justify-content-between">
-  						<div class="text-muted text-truncate" style="font-size: 0.9em;">
-    						<span th:text="${chat.lastMessage()}"></span>
-  						</div>
-  						<div class="ms-2">
-    						<span class="badge bg-success text-white rounded-pill d-none" id="notif-${chat.chatId()}">1</span>
-  						</div>
+			<!-- Sidebar estilo WhatsApp -->
+			<div id="sidebar" class="col-md-5 bg-light border-end">
+				<h3 class="my-3">Chats</h3>
+				<div id="chat-list" th:each="chat : ${chats}" class="mb-2">
+					<div class="chat-item p-2 rounded bg-white shadow-sm mb-2" th:id="${'chat-'+chat.chatId()}"
+						th:data-id="${chat.chatId()}" onclick="selectChatFromElement(this)">
+						<div class="d-flex justify-content-between">
+							<span class="fw-bold text-truncate" th:text="${chat.chatId()}"></span>
+							<small class="text-muted" th:text="${chat.time()}"></small>
+						</div>
+						<div class="d-flex justify-content-between">
+							<div class="text-muted text-truncate" style="font-size: 0.9em;">
+								<span th:text="${chat.lastMessage()}" th:id="${'msg-'+chat.chatId()}"></span>
+							</div>
+							<div class="ms-2">
+								<span class="badge bg-success text-white rounded-pill d-none"
+									th:id="${'notif-'+chat.chatId()}">1</span>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 
-		<!-- Chat principal -->
-		<div id="chat" class="col-md-7 d-flex flex-column" style="height: 100vh;">
+			<!-- Chat principal -->
+			<div id="chat" class="col-md-7 d-flex flex-column" style="height: 100vh;">
 
-			<!-- Título -->
-			<div class="py-3 border-bottom">
-				<h5 id="currentChatTitle" class="mb-0">Selecciona un chat</h5>
-			</div>
-
-			<!-- Mensajes -->
-			<div id="messages" class="flex-grow-1 overflow-auto p-3" style="background-color: #e5ddd5;">
-				<!-- Los mensajes se agregarán aquí -->
-			</div>
-
-			<!-- Input + botón en la misma fila -->
-			<div class="border-top p-3 bg-white">
-				<div class="input-group">
-					<input type="text" id="sms" class="form-control" placeholder="Escribe un mensaje...">
-					<button class="btn btn-success" onclick="sendMessage()">Enviar</button>
+				<!-- Título -->
+				<div class="py-3 border-bottom">
+					<h5 id="currentChatTitle" class="mb-0">Selecciona un chat</h5>
 				</div>
-			</div>
 
+				<!-- Mensajes -->
+				<div id="messages" class="flex-grow-1 overflow-auto p-3" style="background-color: #e5ddd5;">
+					<!-- Los mensajes se agregarán aquí -->
+				</div>
+
+				<!-- Input + botón en la misma fila -->
+				<div class="border-top p-3 bg-white">
+					<div class="input-group">
+						<input type="text" id="sms" class="form-control" placeholder="Escribe un mensaje...">
+						<button class="btn btn-success" onclick="sendMessage()">Enviar</button>
+					</div>
+				</div>
+
+			</div>
 		</div>
 	</div>
-</div>
 
 
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 	<script>
 		var stompClient = null;
 		var currentChatId = null;
 		var currentSubscription = null;
-		
+		var currentSubscriptionNoti = null;
+
 		const unreadCount = {};
 
-		function showNotification(chatId) {
-  		if (chatId === currentChatId) {
-    		return;
-  		}
+		function updateOrCreateChatItem(chatId, mensaje, hora) {
+	const chatList = document.getElementById("chat-list");
+	let chatItem = document.getElementById(`chat-${chatId}`);
 
-  		if (!unreadCount[chatId]) {
-    		unreadCount[chatId] = 0;
-  		}
-  		unreadCount[chatId]++;
+	// Si ya existe el chat, actualizar
+	if (chatItem) {
+		// Actualizar mensaje
+		const msgEl = chatItem.querySelector(`#msg-${chatId}`);
+		if (msgEl) msgEl.textContent = mensaje;
 
-  		const badge = document.getElementById(`notif-${chatId}`);
-  		if (badge) {
-    		badge.textContent = unreadCount[chatId];
-    		badge.classList.remove('d-none');
-  		}
+		// Actualizar hora
+		const horaEl = chatItem.querySelector("small.text-muted");
+		if (horaEl) horaEl.textContent = hora;
+
+		// Actualizar contador de notificaciones
+		const notiEl = chatItem.querySelector(`#notif-${chatId}`);
+		if (notiEl) {
+			if (!unreadCount[chatId]) unreadCount[chatId] = 0;
+			unreadCount[chatId]++;
+			notiEl.textContent = unreadCount[chatId];
+			notiEl.classList.remove("d-none");
+		}
+	} else {
+		// Si no existe, crear y agregar al DOM
+		if (!unreadCount[chatId]) unreadCount[chatId] = 1;
+		const newItem = document.createElement("div");
+		newItem.className = "chat-item p-2 rounded bg-white shadow-sm mb-2";
+		newItem.id = `chat-${chatId}`;
+		newItem.setAttribute("data-id", chatId);
+		newItem.setAttribute("onclick", "selectChatFromElement(this)");
+
+		newItem.innerHTML = `
+			<div class="d-flex justify-content-between">
+				<span class="fw-bold text-truncate">${chatId}</span>
+				<small class="text-muted">${hora}</small>
+			</div>
+			<div class="d-flex justify-content-between">
+				<div class="text-muted text-truncate" style="font-size: 0.9em;">
+					<span id="msg-${chatId}">${mensaje}</span>
+				</div>
+				<div class="ms-2">
+					<span class="badge bg-success text-white rounded-pill" id="notif-${chatId}">${unreadCount[chatId]}</span>
+				</div>
+			</div>
+		`;
+
+		// Insertarlo al inicio del chat-list
+		chatList.prepend(newItem);
 	}
+}
+
 
 		function clearNotification(chatId) {
-  			unreadCount[chatId] = 0;
-  		const badge = document.getElementById(`notif-${chatId}`);
-  		if (badge) {
-    		badge.classList.add('d-none');
-    		badge.textContent = '0';
-  		}
-	}
+			unreadCount[chatId] = 0;
+			const badge = document.getElementById(`notif-${chatId}`);
+			if (badge) {
+				badge.classList.add('d-none');
+				badge.textContent = '0';
+			}
+		}
 
 		function connect() {
 			var socket = new SockJS('/chat-websocket');
 			stompClient = Stomp.over(socket);
-			stompClient.connect({}, function(frame) {
+
+			stompClient.connect({}, function (frame) {
 				console.log('Connected: ' + frame);
 
+				// Solo ahora es seguro suscribirse y enviar
+				if (currentSubscriptionNoti !== null) {
+					currentSubscriptionNoti.unsubscribe();
+				}
+
+				currentSubscriptionNoti = stompClient.subscribe('/noti',
+					function (message) {
+						console.log("notificacion:", message)
+						var msg = JSON.parse(message.body);
+						updateOrCreateChatItem(msg.chatId, msg.lastMessage, msg.time);
+					}
+				);
+
+				stompClient.send("/app/noti", {}, JSON.stringify({
+				}));
 			});
 		}
+
 		function selectChatFromElement(element) {
 			const chatId = element.getAttribute("data-id");
 			selectChat(chatId);
@@ -147,23 +202,23 @@ body {
 			// Limpia la notificación
 			clearNotification(chatId);
 			document.getElementById('currentChatTitle').innerText = "Chat: "
-					+ chatId;
+				+ chatId;
 
 			// Limpiar mensajes anteriores
 			const messagesDiv = document.getElementById("messages");
 			messagesDiv.innerHTML = "";
 
 			$.ajax({
-				url : '/chat/' + currentChatId,
-				method : 'GET',
-				success : function(data) {
+				url: '/chat/' + currentChatId,
+				method: 'GET',
+				success: function (data) {
 					console.log(data)
 					// Suponiendo que 'data' es una lista de mensajes con campos: sender, content, timestamp
-					data.messages.forEach(function(mensaje) {
+					data.messages.forEach(function (mensaje) {
 						showMessage(mensaje)
 					});
 				},
-				error : function() {
+				error: function () {
 				}
 			});
 
@@ -172,18 +227,19 @@ body {
 			}
 
 			currentSubscription = stompClient.subscribe('/chat/' + chatId,
-					function(message) {
-						console.log("mensaje nuevo:", message)
-						var msg = JSON.parse(message.body);
-						if (msg.chatId === currentChatId) {
-  							showMessage(msg);
-						} else {
-  							showNotification(msg.chatId);
-						}
-					});
+				function (message) {
+					console.log("mensaje nuevo:", message)
+					var msg = JSON.parse(message.body);
+					if (msg.chatId === currentChatId) {
+						showMessage(msg);
+					}
+					//else {
+					//		showNotification(msg.chatId);
+					//}
+				});
 
 			stompClient.send("/app/chat", {}, JSON.stringify({
-				chatId : chatId
+				chatId: chatId
 			}));
 		}
 
@@ -194,9 +250,9 @@ body {
 			}
 
 			var message = {
-				chatId : currentChatId,
-				sms : document.getElementById('sms').value,
-				sender : document.getElementById('sender').value
+				chatId: currentChatId,
+				sms: document.getElementById('sms').value,
+				sender: document.getElementById('sender').value
 			};
 
 			stompClient.send("/app/message", {}, JSON.stringify(message));
@@ -236,4 +292,5 @@ body {
 
 	<div th:replace="~{layout/layout :: script}"></div>
 </body>
+
 </html>

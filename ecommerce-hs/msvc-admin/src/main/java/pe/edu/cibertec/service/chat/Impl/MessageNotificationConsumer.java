@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
+import pe.edu.cibertec.dto.chat.ConversationDTO;
 import pe.edu.cibertec.dto.chat.MessageArchivos;
 import pe.edu.cibertec.model.chat.Message;
 
@@ -21,7 +22,10 @@ public class MessageNotificationConsumer {
         try {
             Message mensaje = objectMapper.readValue(mensajeJson, Message.class);
             System.out.println("Message received: " + mensaje.toString());
+            ConversationDTO notificacion = new ConversationDTO(mensaje.getChatId(),
+            		mensaje.getSms(), mensaje.getHora());
             messagingTemplate.convertAndSend("/chat/".concat(mensaje.getChatId()), mensaje);
+            messagingTemplate.convertAndSend("/noti", notificacion);
         } catch (Exception e) {
             System.err.println("Error deserializing message: " + e.getMessage());
         }

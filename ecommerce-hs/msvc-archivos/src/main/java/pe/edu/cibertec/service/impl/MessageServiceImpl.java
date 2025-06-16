@@ -1,6 +1,7 @@
 package pe.edu.cibertec.service.impl;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class MessageServiceImpl implements IMessageService{
 	private final IConverationRepository _ConverationRepository;
 	
 	private final IMessageNotificationService _IMessageNotificationService;
+	private final DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 	private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	private final DateTimeFormatter formattertime = DateTimeFormatter.ofPattern("HH:mm");
 
@@ -58,7 +60,15 @@ public class MessageServiceImpl implements IMessageService{
 	}
 	@Override
 	public List<ConversationDTO> findAllConversations() {
-		return _ConverationRepository.findAllConversations().stream().map(con->{
+		return _ConverationRepository.findAllConversations().stream()
+				.sorted((c1, c2) -> {
+			        Message m1 = c1.getLastMessage();
+			        Message m2 = c2.getLastMessage();
+			        LocalDateTime dt1 = LocalDateTime.parse(m1.getFecha() + " " + m1.getHora(),formatter2);
+			        LocalDateTime dt2 = LocalDateTime.parse(m2.getFecha() + " " + m2.getHora(),formatter2);
+			        return dt2.compareTo(dt1); // Orden descendente (más reciente primero)
+			    })
+				.map(con->{
 			Message m = con.getLastMessage();
 			return new ConversationDTO(con.getChatId(),
 					m.getSms(), 
