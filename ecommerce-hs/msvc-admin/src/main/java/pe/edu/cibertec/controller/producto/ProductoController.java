@@ -109,5 +109,19 @@ public class ProductoController {
         }
         return "redirect:/mantenimiento/productos";
     }
+    
+    @PostMapping("/carga-excel")
+    public ResponseEntity<Map<String, Object>> cargarExcel(@RequestParam("archivo") MultipartFile archivo) {
+        Map<String, Object> respuesta = new HashMap<>();
+
+        try {
+            productoService.procesarExcel(archivo);
+            respuesta.put("mensaje", "Productos cargados correctamente.");
+            return ResponseEntity.ok(respuesta);
+        } catch (Exception e) {
+            respuesta.put("mensaje", "Error al procesar el archivo.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta);
+        }
+    }
 
 }
