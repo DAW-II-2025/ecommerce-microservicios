@@ -21,7 +21,7 @@ public class ProductoService implements IProductoService {
 
             for (int i = 1; i <= hoja.getLastRowNum(); i++) {
                 Row fila = hoja.getRow(i);
-                if (fila == null || fila.getCell(0) == null) continue; //salta filas vacias
+                if (fila == null || fila.getCell(0) == null) continue; // salta filas vacias
 
                 String descripcion = fila.getCell(0).getStringCellValue().trim();
                 double precio = fila.getCell(1).getNumericCellValue();
