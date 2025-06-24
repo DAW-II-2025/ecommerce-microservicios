@@ -28,6 +28,35 @@
                             <input type="hidden" name="categoria" th:value="${categoria}">
                             <input type="hidden" name="mostrarInactivos" th:value="${mostrarInactivos}">
                             <button class="btn btn-primary" type="submit">Buscar</button>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalDescarga">Descargar Plantilla</button>
+                            <div class="modal fade" id="modalDescarga" tabindex="-1" aria-labelledby="modalDescargaLabel" aria-hidden="true">
+  								<div class="modal-dialog">
+    								<form id="formDescarga" enctype="multipart/form-data">
+      									<div class="modal-content">
+								        	<div class="modal-header">
+          										<h5 class="modal-title" id="modalDescargaLabel">Descarga de Productos en Excel</h5>
+          										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        									</div>
+        									<div class="modal-body">
+          										<p>
+            										Descarga la plantilla <a href="/plantilla/Plantilla-Productos.xlsx" download>aquí</a>.
+          										</p>
+          									<div class="mb-3">
+	            								<label for="archivoExcel" class="form-label">Carga tu archivo Excel:</label>
+    	        								<input class="form-control" type="file" id="archivoExcel" name="archivo" accept=".xlsx, .xls">
+        						  			</div>
+        								</div>
+      								</form>
+  								</div>
+							</div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Cargar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
                         </div>
                     </form>
                     <table class="table table-sm table-bordered">
@@ -197,6 +226,35 @@
             });
         });
     });
+    document.getElementById('formCarga').addEventListener('submit', function (e) {
+    	e.preventDefault();
+    
+    	const archivo = document.getElementById('archivoExcel').files[0];
+    	if (!archivo) {
+        	alert('Selecciona un archivo primero');
+        	return;
+    	}
+
+    	const formData = new FormData();
+    	formData.append('archivo', archivo);
+
+    	fetch('/mantenimiento/carga-excel', {
+        	method: 'POST',
+        	body: formData
+    	})
+    	.then(response => {
+        	if (!response.ok) throw new Error('Error en la carga');
+        	return response.json();
+    	})
+    	.then(data => {
+        	alert(data.mensaje);
+        	document.getElementById('formCarga').reset();
+    	})
+    	.catch(error => {
+        	alert('Error al subir el archivo');
+        	console.error(error);
+    	});
+	});
 </script>
 </body>
 </html>
