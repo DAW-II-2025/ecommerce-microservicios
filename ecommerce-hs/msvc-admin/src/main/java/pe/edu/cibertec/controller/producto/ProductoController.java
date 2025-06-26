@@ -9,16 +9,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pe.edu.cibertec.dto.producto.PageDTO;
 import pe.edu.cibertec.dto.producto.ProductoDTO;
 import pe.edu.cibertec.feign.ProductoClient;
 import pe.edu.cibertec.model.producto.Producto;
+import pe.edu.cibertec.service.producto.IProductoService;
+import pe.edu.cibertec.service.producto.Impl.ProductoService;
 
 @Controller
 @RequestMapping("/mantenimiento")
 public class ProductoController {
 
+    @Autowired
+    IProductoService _productoService;
     @Autowired
     ProductoClient _productoClient;
 
@@ -120,7 +125,7 @@ public class ProductoController {
         Map<String, Object> respuesta = new HashMap<>();
 
         try {
-        	_productoClient.procesarExcel(archivo);
+        	_productoService.procesarExcel(archivo);
             respuesta.put("mensaje", "Productos cargados correctamente.");
             return ResponseEntity.ok(respuesta);
         } catch (Exception e) {

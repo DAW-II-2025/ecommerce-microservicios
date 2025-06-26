@@ -3,6 +3,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import pe.edu.cibertec.dto.producto.PageDTO;
 import pe.edu.cibertec.dto.producto.ProductoDTO;
 
@@ -30,5 +31,4 @@ public interface ProductoClient {
 
     @PutMapping("/Producto/activar/{id}")
     ResponseEntity<?> activarProducto(@PathVariable Integer id);
-
 }

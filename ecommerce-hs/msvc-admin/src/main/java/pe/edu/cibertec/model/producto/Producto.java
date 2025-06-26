@@ -1,7 +1,12 @@
 package pe.edu.cibertec.model.producto;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Data;
 
+@Entity
 @Data
 //@Table(name = "") le agregan el nombre p
 public class Producto {
@@ -15,46 +20,12 @@ public class Producto {
 	private int stock;
 	private String categoria;
 	private String imagen;
-	private String estado
+	private String estado;
+
+    public Producto(String descripcion, double precioUnidad, int stock, String categoria, String imagen, String estado) {
+    }
 
     public Producto() {
-    }
 
-    public Producto(String nombre, Double precio, Integer stock) {
-        this.nombre = nombre;
-        this.precio = precio;
-        this.stock = stock;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public Double getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(Double precio) {
-        this.precio = precio;
-    }
-
-    public Integer getStock() {
-        return stock;
-    }
-
-    public void setStock(Integer stock) {
-        this.stock = stock;
     }
 }

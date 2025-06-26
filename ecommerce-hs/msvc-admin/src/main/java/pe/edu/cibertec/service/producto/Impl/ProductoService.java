@@ -1,7 +1,16 @@
 package pe.edu.cibertec.service.producto.Impl;
 
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import pe.edu.cibertec.model.producto.Producto;
+import pe.edu.cibertec.repository.producto.ProductoRepository;
 import pe.edu.cibertec.service.producto.IProductoService;
+
+import java.io.InputStream;
 
 
 @Service
@@ -12,7 +21,8 @@ public class ProductoService implements IProductoService {
     public ProductoService(ProductoRepository productoRepository) {
         this.productoRepository = productoRepository;
     }
-	
+
+    @Override
     public void procesarExcel(MultipartFile archivo) throws Exception {
         try (InputStream is = archivo.getInputStream();
              Workbook workbook = new XSSFWorkbook(is)) {
@@ -24,7 +34,7 @@ public class ProductoService implements IProductoService {
                 if (fila == null || fila.getCell(0) == null) continue; // salta filas vacias
 
                 String descripcion = fila.getCell(0).getStringCellValue().trim();
-                double precio = fila.getCell(1).getNumericCellValue();
+                double precioUnidad = fila.getCell(1).getNumericCellValue();
                 int stock = (int) fila.getCell(2).getNumericCellValue();
                 String categoria = fila.getCell(3).getStringCellValue().trim();
                 String imagen = fila.getCell(4).getStringCellValue().trim();
