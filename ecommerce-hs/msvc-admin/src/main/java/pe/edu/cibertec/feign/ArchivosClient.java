@@ -14,7 +14,7 @@ import pe.edu.cibertec.dto.chat.ConversationDTO;
 import pe.edu.cibertec.model.chat.Message;
 
 
-@FeignClient(name = "msvc-archivos", url = "localhost:8083")
+@FeignClient(name = "msvc-archivos", url = "${msvc.archivos}")
 public interface ArchivosClient {
 
 	@PostMapping("/archivos/message")

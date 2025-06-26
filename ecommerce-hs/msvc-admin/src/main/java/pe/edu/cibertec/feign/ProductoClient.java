@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import pe.edu.cibertec.dto.producto.PageDTO;
 import pe.edu.cibertec.dto.producto.ProductoDTO;
 
-@FeignClient(name = "producto-service", url = "http://localhost:8081")
+@FeignClient(name = "producto-service", url = "${msvc.carrito.bot}")
 public interface ProductoClient {
     @GetMapping("/Producto/list")
     PageDTO<ProductoDTO> getProductos(

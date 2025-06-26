@@ -1,0 +1,74 @@
+
+services:
+  msvc-carrito:
+    image: jhon2226g/ecommerce-msvc-carrito-bot:v1
+    container_name: msvc-carrito
+    mem_limit: 512m
+    ports:
+      - "8081:8081"
+    environment:
+      DB_URL: jdbc:postgresql://ep-summer-field-a4uw6v3a-pooler.us-east-1.aws.neon.tech/pro2023?user=pro2023_owner&password=npg_iFJdku96TfAe&sslmode=require&charSet=UTF8
+      GOOGLE_APPLICATION_CREDENTIALS: /dialogflow-key.json
+      IDENT_CUENTA_META: 349810678213067
+      META_TOKEN: EAAGvywjZAxzoBOZBCa7ChYfzyTQyXx7HS7cNjrxoZABgqwjMEf8rNfGKpQqdRkFAqYcHsnnBgD7Rr46MlZAPupVpvxlo2Bzo3mUHILZCSwOI8tLF1FbQGlGDNiLSNk5xUyPuNBLMncMMQaRS7FU5W39YdzQk9WpfXTZB3V6i9UKantgEENQjjSsn3KRun90o0clQZDZD
+      MP_ACCESS_TOKEN: APP_USR-8213167569645812-040212-21cb12a32d1b038c7fe5453d59e9e7ec-224929625
+      ORIGIN_ANGULAR: http://localhost:4200
+      MSVC_ARCHIVOS: msvc-archivos:8083
+    restart: always
+    volumes:
+      - ./dialogflow-key.json:/dialogflow-key.json
+  #msvc-admin:
+    #image: jhon2226g/ecommerce-msvc-admin:v1
+    #container_name: msvc-admin
+    #mem_limit: 512m
+    #ports:
+    #  - "8084:8084"
+    #environment:
+    #  DB_URL: jdbc:postgresql://ep-summer-field-a4uw6v3a-pooler.us-east-1.aws.neon.tech/pro2023?user=pro2023_owner&password=npg_iFJdku96TfAe&sslmode=require&charSet=UTF8
+    #  SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092  
+    #  MSVC_ARCHIVOS: msvc-archivos:8083
+    #  MSVC_CARRITO: msvc-carrito:8081
+    #volumes:
+    #- D:/DATA:/app/dbfs
+    #restart: always
+    #depends_on:
+   #   - kafka
+  msvc-archivos:
+    image: jhon2226g/ecommerce-msvc-archivos:v1
+    container_name: msvc-archivos
+    mem_limit: 512m
+    ports:
+      - "8083:8083"
+    environment:
+      URI_MONGO: mongodb://mongo:27017/ecommerce 
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092   
+    restart: always
+    depends_on:
+      - mongo
+      - kafka
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - "27018:27017"
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.1
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+  kafka:
+    image: confluentinc/cp-kafka:7.5.1
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+    restart: always

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.example.pro.DTO.MessageArchivos;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
-@FeignClient(name = "msvc-archivos", url = "localhost:8083")
+@FeignClient(name = "msvc-archivos", url = "${msvc.archivos}")
 public interface ArchivosClient {
 
 	@PostMapping("/archivos/message")
