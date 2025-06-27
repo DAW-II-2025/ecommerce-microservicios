@@ -14,9 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pe.edu.cibertec.dto.producto.PageDTO;
 import pe.edu.cibertec.dto.producto.ProductoDTO;
 import pe.edu.cibertec.feign.ProductoClient;
-import pe.edu.cibertec.model.producto.Producto;
 import pe.edu.cibertec.service.producto.IProductoService;
-import pe.edu.cibertec.service.producto.Impl.ProductoService;
 
 @Controller
 @RequestMapping("/mantenimiento")
@@ -59,7 +57,7 @@ public class ProductoController {
 
     @GetMapping("/nuevo")
     public String mostrarFormularioNuevo(Model model){
-        model.addAttribute("producto", new Producto());
+        model.addAttribute("producto", new ProductoDTO(null,null,0.0,0,null,null,null));
         return "producto/productToSave";
     }
 
@@ -123,7 +121,6 @@ public class ProductoController {
     @PostMapping("/carga-excel")
     public ResponseEntity<Map<String, Object>> cargarExcel(@RequestParam("archivo") MultipartFile archivo) {
         Map<String, Object> respuesta = new HashMap<>();
-
         try {
         	_productoService.procesarExcel(archivo);
             respuesta.put("mensaje", "Productos cargados correctamente.");

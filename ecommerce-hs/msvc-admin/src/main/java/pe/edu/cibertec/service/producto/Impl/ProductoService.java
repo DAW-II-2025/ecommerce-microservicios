@@ -6,21 +6,20 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import pe.edu.cibertec.model.producto.Producto;
-import pe.edu.cibertec.repository.producto.ProductoRepository;
+
+import lombok.RequiredArgsConstructor;
+import pe.edu.cibertec.dto.producto.ProductoDTO;
+import pe.edu.cibertec.feign.ProductoClient;
 import pe.edu.cibertec.service.producto.IProductoService;
 
 import java.io.InputStream;
 
 
 @Service
+@RequiredArgsConstructor
 public class ProductoService implements IProductoService {
-	
-	private final ProductoRepository productoRepository;
 
-    public ProductoService(ProductoRepository productoRepository) {
-        this.productoRepository = productoRepository;
-    }
+    private final ProductoClient _Productoclient;
 
     @Override
     public void procesarExcel(MultipartFile archivo) throws Exception {
@@ -40,8 +39,8 @@ public class ProductoService implements IProductoService {
                 String imagen = fila.getCell(4).getStringCellValue().trim();
                 String estado = fila.getCell(5).getStringCellValue().trim();
 
-                Producto producto = new Producto(descripcion, precioUnidad, stock, categoria, imagen, estado);
-                productoRepository.save(producto);
+                ProductoDTO producto = new ProductoDTO(null,descripcion, precioUnidad, stock, categoria, imagen, estado);
+                _Productoclient.crearProducto(producto);
             }
         } catch (Exception e) {
             throw new Exception("Error al procesar el archivo Excel", e);
