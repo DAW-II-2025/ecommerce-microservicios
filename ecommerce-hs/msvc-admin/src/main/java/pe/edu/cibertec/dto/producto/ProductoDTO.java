@@ -1,6 +1,5 @@
 package pe.edu.cibertec.dto.producto;
 
-
 public record ProductoDTO(
         Integer idProducto,
         String descripcion,
