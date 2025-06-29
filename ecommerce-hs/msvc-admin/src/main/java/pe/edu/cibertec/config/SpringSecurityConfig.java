@@ -33,16 +33,29 @@ public class SpringSecurityConfig {
 	authBuilder.userDetailsService(usuarioServices).passwordEncoder(passwordEncoder());
 	return authBuilder.build();
     }
-    
-    @Bean 
-    public SecurityFilterChain FilterChain(HttpSecurity http) throws Exception {
-    	System.err.println(passwordEncoder().encode("admin"));
-    	return http.authorizeHttpRequests((authz) -> authz
-    		// TODOS LOS USUARIOS
-    		.requestMatchers("/**")
-    		.permitAll().requestMatchers(HttpMethod.POST, "/pago/crear-preferencia").hasAnyRole("CLIENTE")    		
-    		.anyRequest().denyAll())    		
-    		.build();
-        }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/login", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/mantenimiento/**").hasRole("ADMIN")  // protegemos ruta
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/mantenimiento/productos", true)
+                        .failureUrl("/login?error=true")
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout=true")
+                        .permitAll()
+                );
+        return http.build();
+    }
 
 }

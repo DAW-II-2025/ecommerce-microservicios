@@ -1,94 +1,104 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th = "http://www.thymeleaf.org">
-
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <title>Inicio de Sesión</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <!-- Bootstrap + FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
 
-    <title>Login</title>
+    <style>
+        body {
+            background: linear-gradient(to right, #1d3557, #457b9d);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-            rel="stylesheet" crossorigin="anonymous">
+        .login-card {
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
 
+        .login-image {
+            background: url('https://png.pngtree.com/png-clipart/20191120/original/pngtree-user-login-or-authenticate-icon-on-gray-background-flat-icon-ve-png-image_5056093.jpg') center/cover no-repeat;
+        }
+
+        .login-form {
+            padding: 3rem;
+        }
+
+        .form-control {
+            border-radius: 0.5rem;
+        }
+
+        .btn-login {
+            border-radius: 0.5rem;
+            background-color: #1d3557;
+            color: white;
+        }
+
+        .btn-login:hover {
+            background-color: #0f2a45;
+        }
+
+        .alert {
+            margin-top: 1rem;
+        }
+    </style>
 </head>
-<header>
-    <div class="alert alert-danger" th:if="${error!=null}" th:text="${error}"></div>
-</header>
-<body class="bg-warning">
+<body>
 
 <div class="container">
-
-    <!-- Outer Row -->
     <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card login-card">
+                <div class="row g-0">
+                    <div class="col-md-6 login-image d-none d-md-block"></div>
 
-        <div class="col-xl-10 col-lg-12 col-md-9">
+                    <div class="col-md-6">
+                        <div class="login-form">
+                            <h4 class="mb-4 text-center text-dark"><i class="fas fa-user-circle me-2"></i>Iniciar Sesión</h4>
 
-            <div class="card o-hidden border-0 shadow-lg my-5">
-                <div class="card-body p-0">
-                    <!-- Nested Row within Card Body -->
-                    <div class="row">
-                        <img class="col-lg-6 d-none d-lg-block bg-login-image bg-dark" src="https://www.vhv.rs/dpng/d/475-4757747_logopedia-innova-schools-logo-png-transparent-png.png" alt="Logo">
-                        <div class="col-lg-6">
-                            <div class="p-5">
-                                <div class="text-center">
-                                    <h1 class="h4 text-gray-900 mb-4">¡Bienvenido de nuevo!</h1>
+                            <!-- Alertas -->
+                            <div th:if="${error}" class="alert alert-danger text-center" th:text="${error}"></div>
+                            <div th:if="${param.logout}" class="alert alert-info text-center">Has cerrado sesión exitosamente</div>
+
+                            <form th:action="@{/login}" method="post">
+                                <div class="mb-3">
+                                    <label for="username" class="form-label">Usuario</label>
+                                    <input type="text" class="form-control" id="username" name="username" placeholder="correo o usuario" required>
                                 </div>
-                                <form class="user" th:action="@{/login}" method="post">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control form-control-user"
-                                               id="exampleInputEmail" name="username" aria-describedby="emailHelp"
-                                               placeholder="Ingresa tu Usuario">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="password" class="form-control form-control-user"
-                                               id="exampleInputPassword" name="password" placeholder="Contraseña">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary btn-user btn-block">
-                                        Login
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Contraseña</label>
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="contraseña" required>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-login">
+                                        <i class="fas fa-sign-in-alt me-1"></i> Ingresar
                                     </button>
+                                </div>
+                            </form>
 
-                                    <hr>
-                                    <p>Este login solo es para personal autorizado,
-                                        si usted no es colaborador de la empresa no intente loguearse
-                                    </p>
-                                </form>
-                                <hr>
-
-                            </div>
+                            <hr>
+                            <p class="text-muted text-center mt-3" style="font-size: 0.85rem;">
+                                Acceso exclusivo para personal autorizado. Si no es parte de la organización, no continúe.
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
-
     </div>
-
 </div>
 
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
-<!-- Popper.js (para Bootstrap) -->
-<script
-        src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
-        crossorigin="anonymous"></script>
-<!-- Bootstrap JS -->
-<script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
-        crossorigin="anonymous"></script>
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
-
 </html>
