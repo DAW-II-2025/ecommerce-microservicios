@@ -45,7 +45,7 @@ public class WhatsappServices implements IWhatsappServices {
 	@Value("${META_TOKEN}")
 	private String auth;
 
-	@Override
+	
 	public void sendMessage(String msg, String num) {
 		Text text = new Text();
 		text.setBody(msg);
