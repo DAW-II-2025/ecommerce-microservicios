@@ -8,9 +8,9 @@
 	<artifactId>ecommerce-hs</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<groupId>pe.cibertec</groupId>
+	<groupId>pe.edu.cibertec.archivos</groupId>
 	<artifactId>msvc-archivos</artifactId>
-	<version>2.6.4</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<name>msvc-archivos</name>
 	<description>Demo project for Spring Boot</description>
 	<url />

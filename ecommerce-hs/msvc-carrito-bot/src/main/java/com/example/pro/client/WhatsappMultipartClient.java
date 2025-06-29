@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.pro.FeignSupportConfig;
 
-@FeignClient(name = "whatsapp-multipart", url = "https://graph.facebook.com/v22.0/${IDENT_CUENTA_META}", 
+@FeignClient(name = "whatsapp-multipart", url = "https://graph.facebook.com/v22.0/${ident.cuenta.meta}", 
 configuration = FeignSupportConfig.class)
 public interface WhatsappMultipartClient {
     @PostMapping(value = "/media", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

@@ -28,121 +28,135 @@
                             <input type="hidden" name="categoria" th:value="${categoria}">
                             <input type="hidden" name="mostrarInactivos" th:value="${mostrarInactivos}">
                             <button class="btn btn-primary" type="submit">Buscar</button>
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalDescarga">Descargar Plantilla</button>
-                            <div class="modal fade" id="modalDescarga" tabindex="-1" aria-labelledby="modalDescargaLabel" aria-hidden="true">
-  								<div class="modal-dialog">
-    								<form id="formDescarga" enctype="multipart/form-data">
-      									<div class="modal-content">
-								        	<div class="modal-header">
-          										<h5 class="modal-title" id="modalDescargaLabel">Descarga de Productos en Excel</h5>
-          										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        									</div>
-        									<div class="modal-body">
-          										<p>
-            										Descarga la plantilla <a href="/plantilla/Plantilla-Productos.xlsx" download>aquí</a>.
-          										</p>
-          									<div class="mb-3">
-	            								<label for="archivoExcel" class="form-label">Carga tu archivo Excel:</label>
-    	        								<input class="form-control" type="file" id="archivoExcel" name="archivo" accept=".xlsx, .xls">
-        						  			</div>
-        								</div>
-      								</form>
-  								</div>
-							</div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-success">Cargar</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#modalDescarga">Descargar Plantilla
+                            </button>
+                            <div class="modal fade" id="modalDescarga" tabindex="-1"
+                                 aria-labelledby="modalDescargaLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <form id="formDescarga" enctype="multipart/form-data">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="modalDescargaLabel">Descarga de Productos en
+                                                    Excel</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Cerrar"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>
+                                                    Descarga la plantilla <a href="/plantilla/Plantilla-Productos.xlsx"
+                                                                             download>aquí</a>.
+                                                </p>
+                                                <div id="errorArchivo" class="text-danger mb-2"
+                                                     style="display:none;"></div>
+                                                <div class="mb-3">
+                                                    <label for="archivoExcel" class="form-label">Carga tu archivo
+                                                        Excel:</label>
+                                                    <input class="form-control" type="file" id="archivoExcel"
+                                                           name="archivo" accept=".xlsx, .xls">
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-success">Cargar</button>
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Cancelar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </form>
-                    <table class="table table-sm table-bordered">
-                        <thead class="bg-dark text-light">
-                        <tr>
-                            <th>ID</th>
-                            <th>NOMBRE</th>
-                            <th>STOCK</th>
-                            <th>CATEGORIA</th>
-                            <th>ESTADO</th>
-                            <th>ACCIONES</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="producto : ${productos}">
-                            <td th:text="${producto.idProducto}"></td>
-                            <td th:text="${producto.descripcion}"></td>
-                            <td th:text="${producto.stock}"></td>
-                            <td th:text="${producto.categoria}"></td>
-                            <td>
-                                <span th:if="${producto.estado == 'D'}" class="badge bg-danger">Inactivo</span>
-                                <span th:if="${producto.estado != 'D'}" class="badge bg-success">Activo</span>
-                            </td>
-                            <td>
-                                <a th:if="${producto.estado != 'D'}" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#update" th:data-id="${producto.idProducto}">
-                                    <i class="fa-solid fa-pen-clip"></i>
-                                </a>
-                                <a th:if="${producto.estado != 'D'}" class="btn btn-danger" data-bs-target="#delete"
-                                   th:href="@{/mantenimiento/desactivar/{id}(id=${producto.idProducto})}"
-                                   onclick="return confirm('¿Estás seguro de que deseas eliminar este producto?')">
-                                    <i class="fas fa-trash"></i>
-                                </a>
-                                <a th:if="${producto.estado == 'D'}" class="btn btn-success"
-                                   th:href="@{/mantenimiento/activar/{id}(id=${producto.idProducto})}"
-                                   onclick="return confirm('¿Estás seguro de que deseas activar este producto?')">
-                                    <i class="fas fa-check"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
                 </div>
-
-                <!-- Controles de Toggle y Paginación -->
-                <div class="d-flex justify-content-between align-items-center">
-                    <!-- Toggle para mostrar productos inactivos -->
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="toggleInactivos"
-                               th:checked="${mostrarInactivos}" onchange="toggleProductos()">
-                        <label class="form-check-label" for="toggleInactivos">
-                            <span th:if="${mostrarInactivos}">Productos Inactivos</span>
-                            <span th:if="${!mostrarInactivos}">Productos Activos</span>
-                        </label>
-                    </div>
-
-                    <!-- Paginación -->
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination justify-content-center mb-0">
-                            <li class="page-item" th:classappend="${productosPage.first} ? 'disabled'">
-                                <a class="page-link"
-                                   th:href="@{/mantenimiento/productos(page=${productosPage.number - 1}, nombre=${nombre}, categoria=${categoria}, mostrarInactivos=${mostrarInactivos})}">
-                                    Anterior
-                                </a>
-                            </li>
-
-                            <li class="page-item"
-                                th:each="i : ${#numbers.sequence(0, productosPage.totalPages - 1)}"
-                                th:classappend="${i == productosPage.number} ? 'active'">
-                                <a class="page-link"
-                                   th:href="@{/mantenimiento/productos(page=${i}, nombre=${nombre}, categoria=${categoria}, mostrarInactivos=${mostrarInactivos})}"
-                                   th:text="${i + 1}">1</a>
-                            </li>
-
-                            <li class="page-item" th:classappend="${productosPage.last} ? 'disabled'">
-                                <a class="page-link"
-                                   th:href="@{/mantenimiento/productos(page=${productosPage.number + 1}, nombre=${nombre}, categoria=${categoria}, mostrarInactivos=${mostrarInactivos})}">
-                                    Siguiente
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-
             </div>
         </div>
+        </form>
+        <table class="table table-sm table-bordered">
+            <thead class="bg-dark text-light">
+            <tr>
+                <th>ID</th>
+                <th>NOMBRE</th>
+                <th>STOCK</th>
+                <th>CATEGORIA</th>
+                <th>ESTADO</th>
+                <th>ACCIONES</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="producto : ${productos}">
+                <td th:text="${producto.idProducto}"></td>
+                <td th:text="${producto.descripcion}"></td>
+                <td th:text="${producto.stock}"></td>
+                <td th:text="${producto.categoria}"></td>
+                <td>
+                    <span th:if="${producto.estado == 'D'}" class="badge bg-danger">Inactivo</span>
+                    <span th:if="${producto.estado != 'D'}" class="badge bg-success">Activo</span>
+                </td>
+                <td>
+                    <a th:if="${producto.estado != 'D'}" class="btn btn-warning" data-bs-toggle="modal"
+                       data-bs-target="#update" th:data-id="${producto.idProducto}">
+                        <i class="fa-solid fa-pen-clip"></i>
+                    </a>
+                    <a th:if="${producto.estado != 'D'}" class="btn btn-danger" data-bs-target="#delete"
+                       th:href="@{/mantenimiento/desactivar/{id}(id=${producto.idProducto})}"
+                       onclick="return confirm('¿Estás seguro de que deseas eliminar este producto?')">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                    <a th:if="${producto.estado == 'D'}" class="btn btn-success"
+                       th:href="@{/mantenimiento/activar/{id}(id=${producto.idProducto})}"
+                       onclick="return confirm('¿Estás seguro de que deseas activar este producto?')">
+                        <i class="fas fa-check"></i>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
+
+    <!-- Controles de Toggle y Paginación -->
+    <div class="d-flex justify-content-between align-items-center">
+        <!-- Toggle para mostrar productos inactivos -->
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="toggleInactivos"
+                   th:checked="${mostrarInactivos}" onchange="toggleProductos()">
+            <label class="form-check-label" for="toggleInactivos">
+                <span th:if="${mostrarInactivos}">Productos Inactivos</span>
+                <span th:if="${!mostrarInactivos}">Productos Activos</span>
+            </label>
+        </div>
+
+        <!-- Paginación -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center mb-0">
+                <li class="page-item" th:classappend="${productosPage.first} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/mantenimiento/productos(page=${productosPage.number - 1}, nombre=${nombre}, categoria=${categoria}, mostrarInactivos=${mostrarInactivos})}">
+                        Anterior
+                    </a>
+                </li>
+
+                <li class="page-item"
+                    th:each="i : ${#numbers.sequence(0, productosPage.totalPages - 1)}"
+                    th:classappend="${i == productosPage.number} ? 'active'">
+                    <a class="page-link"
+                       th:href="@{/mantenimiento/productos(page=${i}, nombre=${nombre}, categoria=${categoria}, mostrarInactivos=${mostrarInactivos})}"
+                       th:text="${i + 1}">1</a>
+                </li>
+
+                <li class="page-item" th:classappend="${productosPage.last} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/mantenimiento/productos(page=${productosPage.number + 1}, nombre=${nombre}, categoria=${categoria}, mostrarInactivos=${mostrarInactivos})}">
+                        Siguiente
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+</div>
+</div>
+</div>
 </div>
 
 <a class="scroll-to-top rounded" href="#page-top">
@@ -164,6 +178,16 @@
 </div>
 
 <script>
+    const mensajeError = document.getElementById('errorArchivo');
+
+    if (!archivo) {
+        mensajeError.style.display = 'block';
+        mensajeError.textContent = 'Debes seleccionar un archivo';
+        return;
+    } else {
+        mensajeError.style.display = 'none'; //ocultar si todo bien
+    }
+
     // Función para manejar el toggle
     function toggleProductos() {
         const checkbox = document.getElementById('toggleInactivos');
@@ -171,7 +195,7 @@
 
         // Actualizar el parámetro mostrarInactivos
         currentUrl.searchParams.set('mostrarInactivos', checkbox.checked);
-        currentUrl.searchParams.set('page', '0'); // Resetear a la primera página
+        currentUrl.searchParams.set('page', '0');
 
         // Redirigir con los nuevos parámetros
         window.location.href = currentUrl.toString();
@@ -190,7 +214,7 @@
                     modal.find('.mod-upd').html(data);
                 },
                 error: function() {
-                    modal.find('.mod-upd').html('<div class="modal-body"><p>Error al cargar los detalles.</p></div>');
+                    modal.find('.mod-upd').html('<div class="modal-body"><p>Error al cargar</p></div>');
                 }
             });
         });
@@ -221,40 +245,48 @@
                     location.reload();
                 },
                 error: function() {
-                    alert("Hubo un error al eliminar el producto, intentelo de nuevo más tarde.")
+                    alert("Hubo un error al eliminar el producto")
                 }
             });
         });
     });
     document.getElementById('formCarga').addEventListener('submit', function (e) {
-    	e.preventDefault();
-    
-    	const archivo = document.getElementById('archivoExcel').files[0];
-    	if (!archivo) {
-        	alert('Selecciona un archivo primero');
-        	return;
-    	}
+    	    e.preventDefault();
 
-    	const formData = new FormData();
-    	formData.append('archivo', archivo);
+    const archivo = document.getElementById('archivoExcel').files[0];
+    const mensajeError = document.getElementById('errorArchivo');
 
-    	fetch('/mantenimiento/carga-excel', {
-        	method: 'POST',
-        	body: formData
-    	})
-    	.then(response => {
-        	if (!response.ok) throw new Error('Error en la carga');
-        	return response.json();
-    	})
-    	.then(data => {
-        	alert(data.mensaje);
-        	document.getElementById('formCarga').reset();
-    	})
-    	.catch(error => {
-        	alert('Error al subir el archivo');
-        	console.error(error);
-    	});
-	});
+    if (!archivo) {
+        mensajeError.style.display = 'block';
+        mensajeError.textContent = 'Selecciona un archivo';
+        return;
+    }
+
+    mensajeError.style.display = 'none';
+
+    const formData = new FormData();
+    formData.append('archivo', archivo);
+
+    fetch('/mantenimiento/carga-excel', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Error en la carga');
+        return response.json();
+    })
+    .then(data => {
+        alert(data.mensaje);
+        document.getElementById('formDescarga').reset();
+        const urlActual = new URL(window.location.href);
+        urlActual.searchParams.set("page", "0");
+        window.location.href = urlActual.toString();
+    })
+    .catch(error => {
+        alert('Error al subir el archivo');
+        console.error(error);
+    });
+});
 </script>
 </body>
 </html>

@@ -15,14 +15,14 @@ import java.nio.file.Path;
 @Configuration
 public class DialogflowConfig {
     
-    @Value("${google.dialogflow.credentials}")
-    private String pathCredencial;
+//    @Value("${google.dialogflow.credentials}")
+//    private String pathCredencial;
 
     @Bean
     public SessionsClient sessionsClient() throws IOException {
-    	System.out.println("credenciales: " +pathCredencial );
-        Path jsonPath = Path.of(pathCredencial);
-        GoogleCredentials credentials = GoogleCredentials.fromStream(Files.newInputStream(jsonPath));
+//    	System.out.println("credenciales: " +pathCredencial );
+//        Path jsonPath = Path.of(pathCredencial);
+        GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
         
         SessionsSettings sessionsSettings = SessionsSettings.newBuilder()
                 .setCredentialsProvider(FixedCredentialsProvider.create(credentials))

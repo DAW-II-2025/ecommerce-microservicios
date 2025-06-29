@@ -1,19 +1,29 @@
 package pe.edu.cibertec.controller.producto;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pe.edu.cibertec.dto.producto.PageDTO;
 import pe.edu.cibertec.dto.producto.ProductoDTO;
 import pe.edu.cibertec.feign.ProductoClient;
-import pe.edu.cibertec.model.producto.Producto;
+import pe.edu.cibertec.service.producto.IProductoService;
 
 @Controller
 @RequestMapping("/mantenimiento")
 public class ProductoController {
 
+    @Autowired
+    IProductoService _productoService;
     @Autowired
     ProductoClient _productoClient;
 
@@ -49,7 +59,7 @@ public class ProductoController {
 
     @GetMapping("/nuevo")
     public String mostrarFormularioNuevo(Model model){
-        model.addAttribute("producto", new Producto());
+        model.addAttribute("producto", new ProductoDTO(null,null,0.0,0,null,null,null));
         return "producto/productToSave";
     }
 
@@ -109,17 +119,46 @@ public class ProductoController {
         }
         return "redirect:/mantenimiento/productos";
     }
-    
-    @PostMapping("/carga-excel")
+
+    //carga a través de multipartfile
+    /*@PostMapping("/carga-excel")
     public ResponseEntity<Map<String, Object>> cargarExcel(@RequestParam("archivo") MultipartFile archivo) {
         Map<String, Object> respuesta = new HashMap<>();
-
         try {
-            productoService.procesarExcel(archivo);
+        	_productoService.procesarExcel(archivo);
             respuesta.put("mensaje", "Productos cargados correctamente.");
             return ResponseEntity.ok(respuesta);
         } catch (Exception e) {
             respuesta.put("mensaje", "Error al procesar el archivo.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta);
+        }
+    }*/
+
+    //carga a través de servletrequest, la anotación @consumes aparentemente no funciona en spring :c
+    @PostMapping("/mantenimiento/carga-excel")
+    public ResponseEntity<Map<String, Object>> cargarExcel(HttpServletRequest request) {
+        Map<String, Object> respuesta = new HashMap<>();
+        try {
+            if (!(request instanceof MultipartHttpServletRequest)) {
+                respuesta.put("mensaje", "Error en tipo de archivo");
+                return ResponseEntity.badRequest().body(respuesta);
+            }
+
+            MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+            MultipartFile archivo = multipartRequest.getFile("archivo");
+
+            if (archivo == null || archivo.isEmpty()) {
+                respuesta.put("mensaje", "No se selecciono el archivo");
+                return ResponseEntity.badRequest().body(respuesta);
+            }
+
+            _productoService.procesarExcel(archivo);
+
+            respuesta.put("mensaje", "Archivo procesado");
+            return ResponseEntity.ok(respuesta);
+
+        } catch (Exception e) {
+            respuesta.put("mensaje", "Error al procesar el archivo:" + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta);
         }
     }

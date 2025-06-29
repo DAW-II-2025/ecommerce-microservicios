@@ -1,6 +1,6 @@
 package pe.edu.cibertec.service.chat.Impl;
 
-import org.springframework.kafka.annotation.KafkaListener;
+//import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ public class MessageNotificationConsumer {
     private final SimpMessagingTemplate messagingTemplate;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @KafkaListener(topics = "message", groupId = "notificacion-group")
+//    @KafkaListener(topics = "message", groupId = "notificacion-group")
     public void listen(String mensajeJson) {
         try {
             Message mensaje = objectMapper.readValue(mensajeJson, Message.class);
