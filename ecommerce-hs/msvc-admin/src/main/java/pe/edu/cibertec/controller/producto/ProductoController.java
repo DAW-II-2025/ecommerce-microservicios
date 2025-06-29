@@ -1,5 +1,7 @@
 package pe.edu.cibertec.controller.producto;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +19,7 @@ import pe.edu.cibertec.dto.producto.PageDTO;
 import pe.edu.cibertec.dto.producto.ProductoDTO;
 import pe.edu.cibertec.feign.ProductoClient;
 import pe.edu.cibertec.service.producto.IProductoService;
+import pe.edu.cibertec.service.producto.Impl.CloudinaryService;
 
 @Controller
 @RequestMapping("/mantenimiento")
@@ -26,7 +29,8 @@ public class ProductoController {
     IProductoService _productoService;
     @Autowired
     ProductoClient _productoClient;
-
+    @Autowired
+    CloudinaryService cloudinaryService;
     @GetMapping("/productos")
     public String listarProductos(@RequestParam(required = false) String nombre,
                                   @RequestParam(required = false) String categoria,
@@ -64,33 +68,75 @@ public class ProductoController {
     }
 
     @PostMapping("/guardar")
-    public String guardarProducto(@ModelAttribute ProductoDTO producto, RedirectAttributes flash) {
-        if(_productoClient.crearProducto(producto)!=null)
-            flash.addFlashAttribute("success", String.format(
-                    "El producto %s, se guardó con éxito",
-                    producto.descripcion()
-            ));
-        else
-            flash.addFlashAttribute("error", "error al guardar producto");
+    public String guardarProducto(@ModelAttribute ProductoDTO producto,
+                                  @RequestParam("archivoImagen") MultipartFile archivoImagen,
+                                  RedirectAttributes flash) {
+        try {
+            // Subir imagen si fue proporcionada
+            if (!archivoImagen.isEmpty()) {
+                String urlImagen = cloudinaryService.subirImagen(archivoImagen);
+                // Establece la URL de imagen en el DTO
+                producto = new ProductoDTO(
+                        producto.idProducto(),
+                        producto.descripcion(),
+                        producto.precioUnidad(),
+                        producto.stock(),
+                        producto.categoria(),
+                        urlImagen,
+                        producto.estado()
+                );
+            }
+            ResponseEntity<?> response = _productoClient.crearProducto(producto);
+            if (response.getStatusCode().is2xxSuccessful()) {
+                flash.addFlashAttribute("success", "Producto guardado correctamente");
+            } else {
+                flash.addFlashAttribute("error", "Error al guardar producto");
+            }
+
+        } catch (Exception e) {
+            flash.addFlashAttribute("error", "Error al procesar imagen o guardar producto: " + e.getMessage());
+        }
+
         return "redirect:/mantenimiento/productos";
     }
 
-    /*@GetMapping("/editar/{id}")
-    public String mostrarFormularioEditar(@PathVariable Integer id, Model model) {
-        ProductoDTO producto = _productoClient.getProductoById(id);
-        model.addAttribute("producto", producto);
-        return "admin/productos/formulario";
-    }*/
 
     @PostMapping("/actualizar/{id}")
-    public String actualizarProducto(@PathVariable Integer id, @ModelAttribute ProductoDTO producto,RedirectAttributes flash) {
-        if(_productoClient.actualizarProducto(id, producto)!=null){
-            flash.addFlashAttribute("success",String.format(" El producto %s con ID: %d, se actualizó con éxito", producto.descripcion(), producto.idProducto()));
+    public String actualizarProducto(@PathVariable Integer id,
+                                     @ModelAttribute ProductoDTO producto,
+                                     @RequestParam("archivoImagen") MultipartFile archivoImagen,
+                                     RedirectAttributes flash) {
+        try {
+            String urlImagen = producto.imagen();
+
+            if (archivoImagen != null && !archivoImagen.isEmpty()) {
+                urlImagen = cloudinaryService.subirImagen(archivoImagen);
+            }
+
+            ProductoDTO productoActualizado = new ProductoDTO(
+                    producto.idProducto(),
+                    producto.descripcion(),
+                    producto.precioUnidad(),
+                    producto.stock(),
+                    producto.categoria(),
+                    urlImagen,
+                    producto.estado()
+            );
+
+            ResponseEntity<?> response = _productoClient.actualizarProducto(id, productoActualizado);
+            if (response.getStatusCode().is2xxSuccessful()) {
+                flash.addFlashAttribute("success", String.format("El producto %s se actualizó correctamente", producto.descripcion()));
+            } else {
+                flash.addFlashAttribute("error", "Error al actualizar producto");
+            }
+
+        } catch (Exception e) {
+            flash.addFlashAttribute("error", "Error al actualizar producto: " + e.getMessage());
         }
-        else
-            flash.addFlashAttribute("error", "error al actualizar producto");
+
         return "redirect:/mantenimiento/productos";
     }
+
 
     @GetMapping("/desactivar/{id}")
     public String desactivarProducto(@PathVariable Integer id, RedirectAttributes flash) {
@@ -120,45 +166,38 @@ public class ProductoController {
         return "redirect:/mantenimiento/productos";
     }
 
-    //carga a través de multipartfile
-    /*@PostMapping("/carga-excel")
+    @PostMapping("/carga-excel")
     public ResponseEntity<Map<String, Object>> cargarExcel(@RequestParam("archivo") MultipartFile archivo) {
         Map<String, Object> respuesta = new HashMap<>();
+
         try {
-        	_productoService.procesarExcel(archivo);
-            respuesta.put("mensaje", "Productos cargados correctamente.");
-            return ResponseEntity.ok(respuesta);
-        } catch (Exception e) {
-            respuesta.put("mensaje", "Error al procesar el archivo.");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta);
-        }
-    }*/
-
-    //carga a través de servletrequest, la anotación @consumes aparentemente no funciona en spring :c
-    @PostMapping("/mantenimiento/carga-excel")
-    public ResponseEntity<Map<String, Object>> cargarExcel(HttpServletRequest request) {
-        Map<String, Object> respuesta = new HashMap<>();
-        try {
-            if (!(request instanceof MultipartHttpServletRequest)) {
-                respuesta.put("mensaje", "Error en tipo de archivo");
-                return ResponseEntity.badRequest().body(respuesta);
-            }
-
-            MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-            MultipartFile archivo = multipartRequest.getFile("archivo");
-
             if (archivo == null || archivo.isEmpty()) {
-                respuesta.put("mensaje", "No se selecciono el archivo");
+                respuesta.put("mensaje", "No se seleccionó ningún archivo");
                 return ResponseEntity.badRequest().body(respuesta);
             }
+
+            String nombreArchivo = archivo.getOriginalFilename();
+            if (nombreArchivo == null || (!nombreArchivo.endsWith(".xlsx") && !nombreArchivo.endsWith(".xls"))) {
+                respuesta.put("mensaje", "El archivo debe ser de formato Excel (.xlsx o .xls)");
+                return ResponseEntity.badRequest().body(respuesta);
+            }
+
+            System.out.println("Procesando archivo: " + nombreArchivo);
 
             _productoService.procesarExcel(archivo);
 
-            respuesta.put("mensaje", "Archivo procesado");
+            respuesta.put("mensaje", "Productos cargados correctamente desde el archivo Excel");
+            respuesta.put("fecha", LocalDateTime.now().toString());
+            respuesta.put("success", true);
+
             return ResponseEntity.ok(respuesta);
 
         } catch (Exception e) {
-            respuesta.put("mensaje", "Error al procesar el archivo:" + e.getMessage());
+            System.err.println("Error al procesar archivo Excel: " + e.getMessage());
+            e.printStackTrace();
+
+            respuesta.put("mensaje", "Error al procesar el archivo: " + e.getMessage());
+            respuesta.put("success", false);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(respuesta);
         }
     }
