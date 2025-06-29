@@ -24,7 +24,7 @@ public class MessageService implements IMessageService {
 	@Override
 	public ResponseEntity<?> publicarMensaje(Message message) {
 		try {
-			String chatId = "num-bot-".concat(message.getSender());
+			String chatId = message.getSender();
 			_ArchivosClient.guardarMensaje(message);
 			messagingTemplate.convertAndSend("/chat/".concat(chatId), message);
 			return ResponseEntity.status(HttpStatus.OK).body(Map.of(

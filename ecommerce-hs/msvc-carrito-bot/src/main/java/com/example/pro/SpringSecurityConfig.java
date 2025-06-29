@@ -1,6 +1,7 @@
 package com.example.pro;
 
 import java.io.IOException;
+
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collection;
@@ -27,6 +28,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+
+import org.springframework.beans.factory.annotation.Value;
+
 
 import com.example.pro.jwt.filter.JwtAuthenticationFilter;
 import com.example.pro.jwt.filter.JwtValidationFilter;
@@ -59,8 +63,8 @@ import jakarta.servlet.http.HttpSession;
 @Configuration
 public class SpringSecurityConfig {
 
-//    @Value("${ORIGIN_ANGULAR}")
-//    private String origenAngular;
+    @Value("${ORIGIN_ANGULAR}")
+    private String origenAngular;
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -122,7 +126,7 @@ public class SpringSecurityConfig {
     CorsConfigurationSource configurationSource() {
 	CorsConfiguration config = new CorsConfiguration();
 	config.setAllowedOrigins(Arrays.asList("https://proyectocarritoantonitrejo.netlify.app",
-		"http://localhost:3001", "http://localhost:3000","https://proyecto-carrito-front.onrender.com"));
+		"http://localhost:4200", "http://localhost:4000","https://proyecto-carrito-front.onrender.com",origenAngular));
 	config.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT", "OPTIONS"));
 	config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin",
 		"Access-Control-Request-Method", "Access-Control-Request-Headers"));
