@@ -35,5 +35,6 @@ public class ChatService implements IChatService {
 		} catch (FeignException e) {
 			e.printStackTrace();
 			return new Conversation(chatId, null);
-		}	}
+		}
+	}
 }

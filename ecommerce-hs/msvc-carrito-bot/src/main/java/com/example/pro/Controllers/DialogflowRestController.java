@@ -39,7 +39,7 @@ public class DialogflowRestController {
 		for (Producto pro : proOp)
 		    fulfillmentText += pro.getInfoWhatsapp();
 		fulfillmentText += "hecha un vistaso a nuestro catálogo de productos: "
-			+ "https://proyectocarritoantonitrejo.netlify.app/productos";
+			+ "https://proyecto-carrito-daw.netlify.app/";
 
 	    }
 	} else {

@@ -66,6 +66,8 @@ public class SpringSecurityConfig {
     @Value("${ORIGIN_ANGULAR}")
     private String origenAngular;
 
+    @Value("${msvc.admin}")
+    private String origenAdmin;
     @Bean
     PasswordEncoder passwordEncoder() {
 	return new BCryptPasswordEncoder();
@@ -73,6 +75,7 @@ public class SpringSecurityConfig {
 
     @Autowired
     private UsuarioServices usuarioServices;
+    
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
@@ -84,7 +87,7 @@ public class SpringSecurityConfig {
     @Bean
     @Order(1)
     public SecurityFilterChain webhookFilterChain(HttpSecurity http) throws Exception {
-        http.securityMatcher("/dialogflow", "/webhook", "/pago") // <-- solo aplica a esta ruta
+        http.securityMatcher("/dialogflow", "/webhook", "/pago","/pago/prueba") // <-- solo aplica a esta ruta
             .authorizeHttpRequests(authz -> authz.anyRequest().permitAll())
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -98,7 +101,7 @@ public class SpringSecurityConfig {
 	System.err.println(passwordEncoder().encode("admin"));
 	return http.authorizeHttpRequests((authz) -> authz
 		// TODOS LOS USUARIOS
-		.requestMatchers("/", "/login", "/Producto/list","/Producto/**", "/swagger-ui/**", "/Cliente/add", "/Cliente/verificar-correo")
+		.requestMatchers("/","/static/**", "/politica.html", "/Producto/list","/Producto/**", "/swagger-ui/**", "/Cliente/add", "/Cliente/verificar-correo")
 		.permitAll().requestMatchers(HttpMethod.POST, "/pago/crear-preferencia").hasAnyRole("CLIENTE")
 		.requestMatchers(HttpMethod.GET, "/Cliente/**").hasAnyRole("CLIENTE")
 		.requestMatchers(HttpMethod.POST, "/Cliente/**").hasAnyRole("CLIENTE")
@@ -125,7 +128,7 @@ public class SpringSecurityConfig {
     @Bean
     CorsConfigurationSource configurationSource() {
 	CorsConfiguration config = new CorsConfiguration();
-	config.setAllowedOrigins(Arrays.asList("https://proyectocarritoantonitrejo.netlify.app",
+	config.setAllowedOrigins(Arrays.asList("https://proyectocarritoantonitrejo.netlify.app", origenAdmin,
 		"http://localhost:4200", "http://localhost:4000","https://proyecto-carrito-front.onrender.com",origenAngular));
 	config.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT", "OPTIONS"));
 	config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin",

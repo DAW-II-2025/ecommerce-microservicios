@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.example.pro.model.requestMessage;
 
-@FeignClient(name = "whatsapp", url = "https://graph.facebook.com/v22.0/${ident.cuenta.meta}")
+@FeignClient(name = "whatsapp", url = "https://graph.facebook.com/v23.0/${ident.cuenta.meta}")
 public interface WhatsappClient {
 
     @PostMapping("/messages")

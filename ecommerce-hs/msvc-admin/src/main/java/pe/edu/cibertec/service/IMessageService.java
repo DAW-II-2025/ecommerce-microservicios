@@ -7,5 +7,4 @@ import pe.edu.cibertec.model.chat.Message;
 public interface IMessageService {
 
 	ResponseEntity<?> publicarMensaje(Message message);
-	
 }

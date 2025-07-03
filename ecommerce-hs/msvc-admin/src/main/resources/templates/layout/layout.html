@@ -75,21 +75,9 @@
     <script
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
             crossorigin="anonymous"></script>
-
-
-</div>
+	
+	</div>
 
 </body>
 
 </html>
-<script>
-    window.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => {
-            const alerts = document.querySelectorAll('.alert');
-            alerts.forEach(alert => {
-                const alertInstance = bootstrap.Alert.getOrCreateInstance(alert);
-                alertInstance.close();
-            });
-        }, 3000);
-    });
-</script>

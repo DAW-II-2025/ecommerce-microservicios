@@ -45,11 +45,11 @@ public class WhatsappServices implements IWhatsappServices {
 	@Value("${META_TOKEN}")
 	private String auth;
 
-	
+	@Override
 	public void sendMessage(String msg, String num) {
 		Text text = new Text();
 		text.setBody(msg);
-		String telefono = num.replace("+", "");
+		String telefono = num;
 		System.out.println("whatsapp enviando : " + telefono);
 		requestMessage requestbody = new requestMessage(telefono, "text", null, text);
 		ResponseEntity<Map<String, Object>> response = client.sendMesagge("Bearer ".concat(auth), requestbody);
@@ -60,7 +60,7 @@ public class WhatsappServices implements IWhatsappServices {
 	@Override
 	public void sendImage(byte[] img, String num) {
 		log.info("Tamaño del byte[] generado: {}", img.length);
-		String telefono = "51".concat(num.contains("+51") ? num.replace("+51", "") : num);
+		String telefono = num;
 		String id = null;
 		try {
 
@@ -139,11 +139,8 @@ public class WhatsappServices implements IWhatsappServices {
 	public void procesarWebhook(String mensaje, String telefono, String nombre) {
 		try {
 			String dialogResponse = _DialogflowService.sendDialogFlow(telefono, nombre, mensaje);
-			ResponseEntity<?> responseArchivos = archivosClient
-					.guardarMensaje(new MessageArchivos(mensaje, telefono, telefono));
-			if (responseArchivos.getStatusCode().equals(HttpStatus.OK)) {
-				sendMessage(dialogResponse, telefono);
-			}
+			sendMessage(dialogResponse, telefono);
+			archivosClient.guardarMensaje(new MessageArchivos(mensaje, telefono, telefono));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

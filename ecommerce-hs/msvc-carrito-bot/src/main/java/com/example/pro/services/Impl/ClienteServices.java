@@ -27,6 +27,7 @@ public class ClienteServices implements IClienteServices {
     @Override
     public Cliente SaveCliente(Cliente entity) {
 	entity.setPassword(encoder.encode(entity.getPassword()));
+	entity.setTelefono("51".concat(entity.getTelefono()));
 	Cliente clienteSaved = _clienteRepository.save(entity);
 	return clienteSaved;
     }

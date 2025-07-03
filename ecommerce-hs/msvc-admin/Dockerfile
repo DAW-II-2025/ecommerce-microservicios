@@ -3,7 +3,7 @@ FROM openjdk:17.0.2 as builder
 WORKDIR /app/msvc-admin
 
 COPY ./pom.xml /app
-COPY ./msvc-admin ./.mvn
+COPY ./msvc-admin/.mvn ./.mvn
 COPY ./msvc-admin/mvnw .
 COPY ./msvc-admin/pom.xml .
 
@@ -17,8 +17,8 @@ FROM openjdk:17.0.2
 
 WORKDIR /app
 RUN mkdir ./logs
-COPY --from=builder /app/msvc-admin/target/msvc-admin-0.0.1-SNAPSHOT.jar .
+COPY --from=builder /app/msvc-admin/target/msvc-admin-2.6.4.jar .
 
-EXPOSE 8081
+EXPOSE 8084
 
-CMD ["java", "-jar", "msvc-admin-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "msvc-admin-2.6.4.jar"]

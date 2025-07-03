@@ -17,22 +17,21 @@ services:
     restart: always
     volumes:
       - ./dialogflow-key.json:/dialogflow-key.json
-  #msvc-admin:
-    #image: jhon2226g/ecommerce-msvc-admin:v1
-    #container_name: msvc-admin
-    #mem_limit: 512m
-    #ports:
-    #  - "8084:8084"
-    #environment:
-    #  DB_URL: jdbc:postgresql://ep-summer-field-a4uw6v3a-pooler.us-east-1.aws.neon.tech/pro2023?user=pro2023_owner&password=npg_iFJdku96TfAe&sslmode=require&charSet=UTF8
-    #  SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092  
-    #  MSVC_ARCHIVOS: msvc-archivos:8083
-    #  MSVC_CARRITO: msvc-carrito:8081
-    #volumes:
-    #- D:/DATA:/app/dbfs
-    #restart: always
-    #depends_on:
-   #   - kafka
+  msvc-admin:
+    image: jhon2226g/ecommerce-msvc-admin:v1
+    container_name: msvc-admin
+    mem_limit: 512m
+    ports:
+      - "8084:8084"
+    environment:
+      DB_URL: jdbc:postgresql://ep-summer-field-a4uw6v3a-pooler.us-east-1.aws.neon.tech/pro2023?user=pro2023_owner&password=npg_iFJdku96TfAe&sslmode=require&charSet=UTF8
+      CLOUDINARY_CLOUD_NAME: dwytuu7v6
+      CLOUDINARY_API_KEY: 317819869571194
+      CLOUDINARY_API_SECRET: 1jiyy3wx2Jd8uvtnsbdWGUPk_BM
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092  
+      MSVC_ARCHIVOS: msvc-archivos:8083
+      MSVC_CARRITO: msvc-carrito:8081
+    restart: always
   msvc-archivos:
     image: jhon2226g/ecommerce-msvc-archivos:v1
     container_name: msvc-archivos
@@ -40,17 +39,12 @@ services:
     ports:
       - "8083:8083"
     environment:
-      URI_MONGO: mongodb://mongo:27017/ecommerce 
+      URI_MONGO: mongodb+srv://jhon2226g:wauo3fwnwaSsyvGT@cluster0.nqi9yrf.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0
+      MSVC_ADMIN: msvc-admin:8084
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092   
     restart: always
-    depends_on:
-      - mongo
+    depends_on:     
       - kafka
-  mongo:
-    image: mongo
-    container_name: mongo
-    ports:
-      - "27018:27017"
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.1
     container_name: zookeeper
@@ -63,12 +57,16 @@ services:
     image: confluentinc/cp-kafka:7.5.1
     container_name: kafka
     ports:
-      - "9092:9092"
+      - "9092:9092"    # Puerto interno para otros contenedores
+      - "9093:9093"    # Puerto expuesto para acceso desde localhost
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:9093
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
     depends_on:
       - zookeeper
     restart: always
+
